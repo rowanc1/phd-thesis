@@ -3,6 +3,16 @@
 
 format: jb-book
 root: abstract
-chapters:
-  - file: introduction
-  - file: framework
+parts:
+  - caption: Frontmatter
+    chapters:
+      - file: abstract
+      - file: preface
+      - file: acknowledgments
+      - file: dedication
+  - caption: Chapters
+    chapters:
+      - file: introduction
+      - file: framework
+      - file: richards
+  - caption: Appendix
