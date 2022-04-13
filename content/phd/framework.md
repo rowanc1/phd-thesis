@@ -1,18 +1,25 @@
 ---
 title: Simulation & Inversion Framework
 description: ''
-date: 2021-08-25T20:06:05.379Z
+date: 2017-12-22T00:00:00.000Z
 authors:
   - name: Rowan Cockett
     userId: vKndfPAZO7WeFxLH1GQcpnXPzfH3
     orcid: 0000-0002-7859-8394
-    corresponding: null
-    email: null
+    corresponding: true
+    email: rcockett@eoas.ubc.ca
     roles: null
-    affiliations: null
+    affiliations:
+      - University of British Columbia
 ---
 
 +++
+
+```{admonition} Preface
+This chapter presents a framework for simulation and parameter estimation for geophysical applications. An earlier version of which was published in {cite:t}`simpeg2015`, and ideas from this chapter also have been presented at several international conferences (cf. {cite:t}`Cockett2014c, Cockett2015c, Cockett2015a`).
+```
+
+---
 
 % (sec:intro)=
 

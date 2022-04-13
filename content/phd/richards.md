@@ -1,18 +1,25 @@
 ---
 title: Richards Equation
 description: ''
-date: 2021-08-25T20:06:05.379Z
+date: 2017-12-22T00:00:00.000Z
 authors:
   - name: Rowan Cockett
     userId: vKndfPAZO7WeFxLH1GQcpnXPzfH3
     orcid: 0000-0002-7859-8394
-    corresponding: null
-    email: null
+    corresponding: true
+    email: rcockett@eoas.ubc.ca
     roles: null
-    affiliations: null
+    affiliations:
+      - University of British Columbia
 ---
 
 +++
+
+```{admonition} Preface
+This chapter presents a computationally scalable algorithm for solving inverse problems for hydraulic parameters in vadose zone flow using the Richards equation. This work has been submitted for peer review and the preprint is available on _arXiv_ {cite:p}`Cockett2017`; preliminary versions of this research were presented at two conferences {cite:p}`Cockett2013, Cockett2013a`.
+```
+
+---
 
 # Introduction
 

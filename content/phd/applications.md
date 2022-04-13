@@ -1,18 +1,25 @@
 ---
 title: Vadose Zone Inversions
 description: ''
-date: 2021-08-25T20:06:05.379Z
+date: 2017-12-22T00:00:00.000Z
 authors:
   - name: Rowan Cockett
     userId: vKndfPAZO7WeFxLH1GQcpnXPzfH3
     orcid: 0000-0002-7859-8394
-    corresponding: null
-    email: null
+    corresponding: true
+    email: rcockett@eoas.ubc.ca
     roles: null
-    affiliations: null
+    affiliations:
+      - University of British Columbia
 ---
 
 +++
+
+```{admonition} Preface
+This chapter involves several numerical examples, which were inspired by work from my undergraduate thesis, of which two papers were published during the course of my graduate research {cite:p}`Pidlisecky2013, Cockett2014`. The forward simulation framework for multi-parameter simulations and inversions in time-domain physical problems used in this chapter was derived from collaborative work between electromagnetics and vadose zone flow {cite:p}`Heagy2016`. One of the numerical examples presented has previously been published in {cite:p}`Cockett2017`.
+```
+
+---
 
 # Introduction
 
@@ -185,7 +192,7 @@ for four canonical soil types of (a) sand, (b) loam, (c) sandy clay, and (d) cla
 
 To further explore the van Genuchten parameterizations, we will use a homogeneous sandy clay loam ($K_s$: 1.2-06 m/s, $\alpha$: 3.6 1/m, $\n$: 1.25, $\theta_r$: 0.068, $\theta_s$: 0.33) in a small infiltration experiment. The boundary conditions on the top of a 40 cm deep soil profile are $\psi=-5$cm at $z=0$cm and $\psi=-41.5$cm at $z=-40$cm. The Richards equation simulation is run for a time period of 22 hours with an exponentially increasing time step from 5 s to 60 s. Saturation data is collected at nine equally spaced locations from -2 cm to -34 cm. The water content data at each of the nine locations is sampled 23 times over the length of the experiment. This sampling differs from traditionally collected laboratory experiment data, which records water outflow, distributed pressure measurements (using tensiometers), or bulk soil moisture. The analysis here is completed with the assumption that distributed estimates of soil moisture are available from a geophysical method.
 
-In the following sections, we will be estimating the van Genuchten parameters ($K_s, \theta_r, \theta_s, \alpha$, and $n$) from this water content data. In this section, we will visualize the objective function, $l_2$ norm of the data difference, around the true model to get a sense of the optimization problem for a homogeneous soil with this data. Even with a homogeneous soil, the objective function is in five-dimensional space, so both visualization and identification of local minima is difficult. {numref}`Figure %s <fig:richards-objfun-sat>` shows ten profiles through the objective function. These profiles are created by varying two of the parameters while keeping all other parameters constant at the true values. A $40 \times 40$ grid, over reasonable bounds of each parameter, requires 16,000 simulations and produces ten cross-sections of the five-dimensional space. The cross-sections of $\theta_s - K_s$, $n - K_s$, $n - \theta_r$, and $n - \alpha$ show well-defined objective functions that are convex along these planes. The structure of the objective functions for $\alpha$ and $n$, with respect to $\theta_s$, shows a more elongated objective function with contours nearly perpendicular to the $\theta_s$ axis, which means that, while keeping $\theta_s$ constant in {numref}`Figure %sh <fig:richards-objfun-sat}>` and {numref}`Figure %si <fig:richards-objfun-sat}>`, both $\alpha$ and $n$ can vary over their respective ranges at similar objective function values. In {numref}`Figure %sc <fig:richards-objfun-sat>`, $\alpha$ can also change while keeping $K_s$ constant at similar objective function values. {cite:t}`Mawer2013` also notes low sensitivity to the $\alpha$ parameter when inverting saturation estimates for homogeneous layers. In this case, we also see the contours of the $\theta_r - \theta_s$ objective function as perpendicular to the $\theta_s$ axis, which indicates low sensitivity to $\theta_r$ in this plane of the objective function ({numref}`Figure %se <fig:richards-objfun-sat>`). In all cases, when $\theta_s$ is involved, except for the cross-section of $\theta_s - K_s$, the objective function is elongated perpendicular to the $\theta_s$ axis. This perpendicular elongation means that there is high sensitivity to $\theta_s$, which is not surprising given that our data is water content. Additionally, the boundary conditions of the experiment yield pressure head values in the entire domain between $10^{-2}$m and $10^{0}$m, which is in the domain where $\theta_s$ has the greatest influence over the shape of the water content response to pressure head ({numref}`Figure %s <fig:richards-theta-fun>`).
+In the following sections, we will be estimating the van Genuchten parameters ($K_s, \theta_r, \theta_s, \alpha$, and $n$) from this water content data. In this section, we will visualize the objective function, $l_2$ norm of the data difference, around the true model to get a sense of the optimization problem for a homogeneous soil with this data. Even with a homogeneous soil, the objective function is in five-dimensional space, so both visualization and identification of local minima is difficult. {numref}`Figure %s <fig:richards-objfun-sat>` shows ten profiles through the objective function. These profiles are created by varying two of the parameters while keeping all other parameters constant at the true values. A $40 \times 40$ grid, over reasonable bounds of each parameter, requires 16,000 simulations and produces ten cross-sections of the five-dimensional space. The cross-sections of $\theta_s - K_s$, $n - K_s$, $n - \theta_r$, and $n - \alpha$ show well-defined objective functions that are convex along these planes. The structure of the objective functions for $\alpha$ and $n$, with respect to $\theta_s$, shows a more elongated objective function with contours nearly perpendicular to the $\theta_s$ axis, which means that, while keeping $\theta_s$ constant in {numref}`Figure %sh <fig:richards-objfun-sat>` and {numref}`Figure %si <fig:richards-objfun-sat>`, both $\alpha$ and $n$ can vary over their respective ranges at similar objective function values. In {numref}`Figure %sc <fig:richards-objfun-sat>`, $\alpha$ can also change while keeping $K_s$ constant at similar objective function values. {cite:t}`Mawer2013` also notes low sensitivity to the $\alpha$ parameter when inverting saturation estimates for homogeneous layers. In this case, we also see the contours of the $\theta_r - \theta_s$ objective function as perpendicular to the $\theta_s$ axis, which indicates low sensitivity to $\theta_r$ in this plane of the objective function ({numref}`Figure %se <fig:richards-objfun-sat>`). In all cases, when $\theta_s$ is involved, except for the cross-section of $\theta_s - K_s$, the objective function is elongated perpendicular to the $\theta_s$ axis. This perpendicular elongation means that there is high sensitivity to $\theta_s$, which is not surprising given that our data is water content. Additionally, the boundary conditions of the experiment yield pressure head values in the entire domain between $10^{-2}$m and $10^{0}$m, which is in the domain where $\theta_s$ has the greatest influence over the shape of the water content response to pressure head ({numref}`Figure %s <fig:richards-theta-fun>`).
 
 ```{figure} images/richards-objfun-saturation.png
 :name: fig:richards-objfun-sat

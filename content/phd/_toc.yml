@@ -23,3 +23,6 @@ parts:
       - file: discretize
       - file: extensions
       - file: dissemination
+  - caption: Presentations
+    chapters:
+      - file: presentations

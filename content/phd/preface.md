@@ -1,15 +1,16 @@
 ---
 title: Preface
 description: The research for this dissertation was completed while studying at the University of British Columbia. This research has resulted in three peer reviewed publications, three expanded conference abstracts, and several auxiliary works.
-date: 2021-08-25T20:06:05.379Z
+date: 2017-12-22T00:00:00.000Z
 authors:
   - name: Rowan Cockett
     userId: vKndfPAZO7WeFxLH1GQcpnXPzfH3
     orcid: 0000-0002-7859-8394
-    corresponding: null
-    email: null
+    corresponding: true
+    email: rcockett@eoas.ubc.ca
     roles: null
-    affiliations: null
+    affiliations:
+      - University of British Columbia
 ---
 
 +++
