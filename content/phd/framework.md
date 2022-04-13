@@ -1,5 +1,5 @@
 ---
-title: Simulation and inversion framework
+title: Simulation & Inversion Framework
 description: ''
 date: 2021-08-25T20:06:05.379Z
 authors:

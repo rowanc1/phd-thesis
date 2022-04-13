@@ -1,5 +1,5 @@
 ---
-title: Interfaces and extensions
+title: Interfaces & Extensions
 description: ''
 date: 2021-08-25T20:06:05.379Z
 authors:
@@ -258,7 +258,7 @@ While completing my studies, I was involved in creating a number of structural g
 
 ```{figure} images/visiblegeology.png
 :name: fig:visiblegeology
-Parameterized geologic models using a series of analytic functions. Models were created using Visible Geology (<http://app.visiblegeology.com>).
+Parameterized geologic models using a series of analytic functions. Models were created using Visible Geology (<https://app.visiblegeology.com>).
 ```
 
 ## Dimensionality and controlled variables

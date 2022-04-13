@@ -1,5 +1,5 @@
 ---
-title: Richards equation
+title: Richards Equation
 description: ''
 date: 2021-08-25T20:06:05.379Z
 authors:

@@ -10,8 +10,6 @@ authors:
     email: null
     roles: null
     affiliations: null
-name: blank
-oxa:
 ---
 
 +++

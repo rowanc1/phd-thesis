@@ -24,7 +24,7 @@ Much of my dissertation required the development of software, which is implement
 
 The conclusions from each component of my thesis are contained within each chapter and each appendix. However, the central aim of my dissertation was to develop a framework for geophysical inversions: this has been disseminated through three publications {cite:p}`Cockett2017, Heagy2016, simpeg2015`, four extended abstracts {cite:p}`HeagySEG2014, Kang2015, Heagy2015, HeagyEM62017`, over twenty conference presentations, and a dedicated international workshop[^1]. Furthermore, this framework has demonstrated value in several new research areas, methodologies, and case studies (cf. {cite:t}`Kang2017, Miller2017, Kang2016, Rosenkjaer2016`). Overall, the contributions of my thesis are twofold:
 
-[^1]: At the Banff International Research Station, see <http://www.birs.ca/events/2016/2-day-workshops/16w2695>
+[^1]: At the Banff International Research Station, see <https://www.birs.ca/events/2016/2-day-workshops/16w2695>
 
 1. a conceptual organization and synthesis of geophysical simulations and inversions into a framework that has been rigorously, numerically tested; and
 2. an algorithm for large-scale vadose zone parameter estimation for any distributed hydraulic parameter, regardless of the empirical relationship used.
