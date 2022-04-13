@@ -1,0 +1,19 @@
+version: 1
+sync: []
+web:
+  name: PhD Thesis
+  domains:
+    - rowanc1.curve.space
+  logo: public/logo.svg
+  logoText: PhD Thesis
+  twitter: rowancockett
+  nav:
+    - title: Project Templates
+      url: /phd
+  sections:
+    - title: A framework for geophysical inversions
+      folder: content/phd
+      path: content/phd
+  actions:
+    - title: Learn More
+      url: https://docs.curvenote.com/web
