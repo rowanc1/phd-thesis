@@ -135,7 +135,9 @@ Discretization of unknowns in 1D, 2D and 3D space. Red circles are the locations
 The arrows are the locations of the discretized flux $\vec f$ on each cell face. Modified after {cite:t}`fvtutorial`.
 ```
 
-The discretization of a diffusion-like equation on an orthogonal mesh is well-known (see {cite:p}`Haber2001,fletcher,HaberHeldmannAscher07,Ascher2011` and reference within). We discretize the differential operators by using the usual mass balance consideration and the elimination of the flux, $\bff$ \footnote{Here we assume an isotropic conductivity that leads to a diagonal mass matrix and this yields easy elimination of the fluxes.}. This spatial discretization leads to the following discrete nonlinear system of ordinary differential equations (assuming homogeneous Dirichlet boundary conditions):
+The discretization of a diffusion-like equation on an orthogonal mesh is well-known (see {cite:p}`Haber2001,fletcher,HaberHeldmannAscher07,Ascher2011` and reference within). We discretize the differential operators by using the usual mass balance consideration and the elimination of the flux, $\bff$ [^2]. This spatial discretization leads to the following discrete nonlinear system of ordinary differential equations (assuming homogeneous Dirichlet boundary conditions):
+
+[^2]: Here we assume an isotropic conductivity that leads to a diagonal mass matrix and this yields easy elimination of the fluxes.
 
 % equations/richards/richards-mixed-discrete
 

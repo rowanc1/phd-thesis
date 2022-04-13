@@ -15,4 +15,11 @@ parts:
       - file: introduction
       - file: framework
       - file: richards
-  - caption: Appendix
+      - file: applications
+      - file: conclusions
+  - caption: Appendices
+    chapters:
+      - file: ontology
+      - file: dissemination
+      - file: discretize
+      - file: extensions
