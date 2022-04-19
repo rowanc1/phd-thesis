@@ -13,6 +13,10 @@ authors:
     affiliations:
       - University of British Columbia
 doi: 10.14288/1.0362383
+journal: PhD Thesis
+open_access: true
+license: CC-BY-4.0
+numbering: false
 ---
 
 +++

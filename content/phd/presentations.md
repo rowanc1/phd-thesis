@@ -11,6 +11,11 @@ authors:
     roles: null
     affiliations:
       - University of British Columbia
+journal: PhD Thesis
+open_access: true
+license: CC-BY-4.0
+doi: 10.14288/1.0362383
+numbering: false
 ---
 
 +++

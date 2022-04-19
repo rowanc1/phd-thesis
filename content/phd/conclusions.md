@@ -11,6 +11,19 @@ authors:
     roles: null
     affiliations:
       - University of British Columbia
+subject: Chapter 5
+journal: PhD Thesis
+open_access: true
+license: CC-BY-4.0
+doi: 10.14288/1.0362383
+numbering:
+  enumerator: 5.%s
+  heading_1: true
+  heading_2: true
+  heading_3: false
+  heading_4: false
+  heading_5: false
+  heading_6: false
 ---
 
 +++

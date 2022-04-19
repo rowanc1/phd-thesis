@@ -15,5 +15,6 @@ web:
       folder: content/phd
       path: content/phd
   actions:
-    - title: Learn More
-      url: https://docs.curvenote.com
+    - title: Download Thesis
+      static: true
+      url: ubc_2018_february_cockett_archarowan.pdf

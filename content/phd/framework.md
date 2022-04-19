@@ -1,6 +1,6 @@
 ---
 title: Simulation & Inversion Framework
-description: ''
+description: A framework for simulation and parameter estimation for geophysical applications.
 date: 2017-12-22T00:00:00.000Z
 authors:
   - name: Rowan Cockett
@@ -11,6 +11,19 @@ authors:
     roles: null
     affiliations:
       - University of British Columbia
+subject: Chapter 2
+journal: PhD Thesis
+open_access: true
+license: CC-BY-4.0
+doi: 10.14288/1.0362383
+numbering:
+  enumerator: 2.%s
+  heading_1: true
+  heading_2: true
+  heading_3: false
+  heading_4: false
+  heading_5: false
+  heading_6: false
 ---
 
 +++
