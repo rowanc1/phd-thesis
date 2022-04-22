@@ -55,7 +55,7 @@ r \in [0, \infty), \qquad \theta \in [0, 2\pi), \qquad z \in (-\infty, \infty)
 
 Cylindrical symmetry is enforced through a single cell in $\theta$. With the exception of calculations for boundary conditions, volume and area are formulated similarly to tensor meshes. Cylindrical meshes are often used for electromagnetics problems for layered systems or cylindrically symmetric problems, such as geophysics or fluid flow around a borehole {cite:p}`Pidlisecky2013, Heagy2016`. Fully unstructured (tetrahedral) meshes will not be considered here, but are commonly used in geophysics and hydrogeology (e.g. \cite{Ollivier-gooch2002, Jahandari2017}). We chose the meshes used in this appendix for their common use in electromagnetic geophysics and fluid flow {cite:p}`Haber2001, liol96, Egbert2012, McDonald2003, Kelbert2014, simpeg2015`. All meshes are easy to parameterize, which is an advantage when relatively little is known about the simulation domain, as is the case in the context in geophysical inverse problems.
 
-```{figure} figures/fv-mesh-types.png
+```{figure} images/fv-mesh-types.png
 :name: fig:finitevolume-mesh-types
 Three mesh types in two dimensions on the domain of a unit square: (a) a tensor product mesh, (b) a quadtree mesh, and (c) a curviliear mesh.
 ```
@@ -64,14 +64,14 @@ Three mesh types in two dimensions on the domain of a unit square: (a) a tensor 
 
 This approach requires defining variables at either cell centers, nodes, faces, or edges, as described in {numref}`Figure %s <fig:finitevolume-cell-anatomy-tensor>`. The finite volume technique is derived geometrically from studying the control volume of a mesh 'cell'. The cell center is often used for scalar variables or anisotropic tensors that represent physical properties. This shows that a single value fills the entire cell, allowing discontinuities between adjacent cells. From a geologic perspective, discontinuities are prevalent, as large differences in physical properties may exist between geologic layers. Cell nodes, alternatively, are often used for variables that are continuously varying in space; that is, internal to a cell values between nodes can be found through bi/tri-linear interpolation. Vector quantities are held on the faces or edges.
 
-```{figure} figures/fv-cell-anatomy-tensor.png
+```{figure} images/fv-cell-anatomy-tensor.png
 :name: fig:finitevolume-cell-anatomy-tensor
 Names of a finite volume cell on a tensor mesh in (a) one dimension, (b) two dimensions, and (c) three dimensions.
 ```
 
 A cell face variable represents a vector that is a flux into or out of that face; the vector is pointed in the face normal direction, $\vec{n}$. As seen in the curvilinear cell in {numref}`Figure %s <fig:finitevolume-cell-anatomy-curvi>`, the face normal directions may not be orthogonal, nor parallel to the Cartesian axes. However, as the direction of the face normal is a property of the mesh, the face variables only store the magnitude of the vector. A face variable on a single rectilinear cell is a length four array in 2D and a length six array in 3D. There are twelve edges in 3D, four in 2D, and one in 1D for each cell, all holding vector quantities that point in the tangent directions, $\vec{t}$. While cell faces represent fluxes, edges represent vector fields, as is the case in electromagnetics.
 
-```{figure} figures/fv-cell-anatomy-curvi.png
+```{figure} images/fv-cell-anatomy-curvi.png
 :name: fig:finitevolume-cell-anatomy-curvi
 Names of a finite volume cell on a curvilinear mesh in (a) two dimensions, and (b) three dimensions. Note that the cell faces and edges are no longer orthogonal.
 ```
@@ -108,7 +108,7 @@ n_{e_z} &= (n_{c_x} + 1) \times (n_{c_y} + 1) \times n_{c_z}    & \text{z-edges}
 
 When comparing this to a cylindrically symmetric mesh, it is interesting to note that neither nodes nor $\theta$ faces exist, and edges only exist in the $\theta$ direction. A tree mesh has an added complication, which occurs when two adjacent cells have different refinement levels, leading to hanging nodes, edges, and faces. {numref}`Figure %s <fig:finitevolume-cell-anatomy-tree>` schematically shows the locations of the hanging faces and nodes. When not dealt with, these complications cause numerical inaccuracies, which we will discuss further in Section \ref{sec:operators} on differential operators and Section \ref{sec:innerproducts} on inner products.
 
-```{figure} figures/fv-cell-anatomy-tree.png
+```{figure} images/fv-cell-anatomy-tree.png
 :name: fig:finitevolume-cell-anatomy-tree
 Names of a finite volume cell on a tree mesh in (a) two dimensions, and (b) three dimensions. Note the location of hanging x-faces from the refined cells; hanging edges are not shown.
 ```
@@ -191,7 +191,7 @@ Similar techniques for the weak formulation of Maxwell equations can be derived 
 
 With the terminology and structure of the meshes well-defined, we can now create operators for the meshes. Although operators for averaging and interpolation are critical to any implementation, in this section, we will focus on the differential operators for the divergence, curl, and gradient. These operators take the form of sparse matrices, which are properties of each mesh. Although nuances exist in creating the operators for each mesh type, the basic building blocks come from the geometric concepts of individual cells, specifically the cell volume, face areas, and edge lengths. Given the cell spacings of tensor meshes, the computation of these properties is straightforward. For the cylindrical mesh, these values must be calculated in cylindrical coordinates. The volume and area calculations on the curvilinear mesh are straightforward in two dimensions. However, in three dimensions, the faces of the cell may not lie on a plane and, as a result, both the volume and face areas may not be well-defined. For face area, we use the average of the four parallelograms, which are calculated at each node of the face. As seen in {numref}`Figure %s <fig:finitevolume-cell-tetras>`, the cell volume is calculated by dividing the cell into five tetrahedrons and calculating the volume of each.
 
-```{figure} figures/fv-cell-tetras.png
+```{figure} images/fv-cell-tetras.png
 :name: fig:finitevolume-cell-tetras
 Volume calculation using five tetrahedra.
 ```
@@ -255,7 +255,7 @@ where $\mathbf{D}_i$ is the difference matrix in one-dimension for the $i${sup}`
 
 The diagonal matrix, $\mathbf{S}$, contains the surface areas for each cell in the $x$, $y$, and $z$ directions, concatenated on the matrix diagonal. As the divergence only takes account of fluxes into and out of a cell in the direction of the face normal, this concatenation works for any logically rectangular mesh, regardless of orthogonality. For a cylindrical mesh, we need to give attention to the middle cylindrical cell where the flux at $r=0$ is known to be zero and, as such, this column can be removed from the $\mathbf{D}_r$ matrix.
 
-```{figure} figures/fv-divergence.png
+```{figure} images/fv-divergence.png
 :name: fig:divergence
 Visual connection between the continuous and discrete representations of the divergence.
 ```
@@ -263,7 +263,7 @@ Visual connection between the continuous and discrete representations of the div
 For a tree mesh, we need to pay special attention to the hanging faces to achieve second-order convergence for the divergence operator. Although the divergence cannot be constructed through Kronecker product operations, the initial steps are exactly the same for calculating the stencil, volumes, and areas. These steps yield a divergence defined for every cell in the mesh using all faces. However, redundant information exists when including hanging faces.
 As seen in {numref}`Figure %s <fig:finitevolume-quadtree-divergence>`, the x-face between the cells $\{1, 3\}$ and cell 4 has three locations for an x-face variable, but there is conceptually only a single flux at that location: x-face 4. As such, we can construct a matrix that identifies these hanging faces and assigns them to the same face variable. This matrix includes only ones and can be multiplied on the right-hand side of the unreduced divergence. This ensures that the flux into the negative x-face of cell 4 in {numref}`Figure %s <fig:finitevolume-quadtree-divergence>` has a single numeric value.
 
-```{figure} figures/fv-quadtree-divergence.png
+```{figure} images/fv-quadtree-divergence.png
 :name: fig:finitevolume-quadtree-divergence
 Simple quadtree mesh showing (a) the mesh structure, cell numbering, and face numbering in both the $x$ and $y$ directions; and (b) the structure of the face divergence matrix that has eliminated the hanging faces.
 ```
@@ -290,7 +290,7 @@ where, $\vec{n}$ is the outward facing normal, $s$ is the area of the face, and 
 
 where $\mathbf{l}$ is an edge length vector, and $\mathbf{s}$ is the face area vector. The numeric curl on edges yields a vector variable on cell faces. Similar to the divergence operator, this definition can exploit the logically rectangular nature of the mesh and create the difference matrix, $\mathbf{C}_\pm$, using Kronecker products.
 
-```{figure} figures/fv-curl.png
+```{figure} images/fv-curl.png
 :name: fig:finitevolume-curl
 Edge path integration or definition of the curl operator.
 ```
@@ -546,7 +546,7 @@ In 2D, these conventions are similarly defined as:
 
 Both the isotropic and coordinate anisotropic material properties result in a diagonal mass matrix on a tensor mesh. This is easy to invert if necessary. However, in the fully anisotropic case, or for any curvilinear mesh, the inner product matrix is not diagonal, as can be seen for a 3D mesh in the figure below.
 
-```{figure} figures/fv-anisotropy-innerproduct.png
+```{figure} images/fv-anisotropy-innerproduct.png
 :name: fig:finitevolume-anisotropy-innerproduct
 Matrix structure of a face inner product of a cell centered physical property on a tensor mesh.
 ```
@@ -691,7 +691,7 @@ The `discretize` package (<https://discretize.simpeg.xyz>) allows for the explic
 
 The object-oriented programming model in Python allows organization of the finite volume methods for the various meshes into a class inheritance structure. This organization has highlighted the similarities between techniques through elimination of redundant code between shared concepts and methods. Such elimination leads to a concise description of the differences between the methods, which was outlined in the previous section. We show our chosen organization in its entirety in {numref}`Figure %s <fig:finitevolume-classes>`. This figure shows the class inheritance and class properties of the `discretize` package and is best viewed in digital form.
 
-```{figure} figures/fv-classes.png
+```{figure} images/fv-classes.png
 :name: fig:finitevolume-classes
 The computational ontology developed for the `discretize` package showing inheritance and commonalities between the four mesh types.
 ```
@@ -710,14 +710,14 @@ The major difference between the mesh types is the instantiation of each type. A
 
 Here we will briefly explore the application of the curvilinear mesh for a DC resistivity problem, which was introduced in Section \ref{sec:dc-derivation}. We will explore the equations for a tensor mesh and a curvilinear mesh over a unit cube with Neumann boundary conditions. We tested the forward operators for analytical potential fields with the appropriate boundary conditions. A series of electrode arrays (surveys) were written to produce and collect data from the forward model. The survey used in this paper considered all receiver permutations in a grid on the top surface of the model. We note that it is not possible to experimentally collect data at the same location as the source electrodes; we discarded these permutations.
 
-```{figure} figures/fv-tensor-curvilinear-compare.png
+```{figure} images/fv-tensor-curvilinear-compare.png
 :name: fig:fv-ex-tensor-curvilinear-compare
 Regular mesh and mesh aligned to layer for a simple conductivity model at $14\times14\times14$.
 ```
 
 For the numerical experiments presented here, we use a true model with a geologic interface with varying elevation. A cross-section through the 3D model at a mid-range discretization is seen in {numref}`Figure %s <fig:fv-ex-tensor-curvilinear-compare>`. The layer above the interface has a conductivity of 1 Sm$^{-1}$ and the layer below the interface has a conductivity of 100 Sm$^{-1}$. We produced data from the forward operator, with the true model discretized, using $45\times45\times45$ cells. We created a series of models that ranged from $5\times5\times5$ to $40\times40\times40$, over the same domain. At each discretization level, the true model was down-sampled onto a regular mesh as well as a curvilinear mesh that was aligned to the interface. The survey setup was a grid of $4\times4$ equally spaced electrodes centered on the top surface of the model. There were a total of 16 electrodes, 120 source configurations, and 91 active measurements per source dipole. This gave rise to 10,920 total measurements, half of which are symmetric and likely would not have been collected in a field experiment, but were collected in this numerical experiment. We compare the data collected from each of the test models directly to the large model's data and plot the norm in {numref}`Figure %s <fig:fv-ex-tensor-curvilinear-compare-norms>`. The mesh that is aligned to the layer performs significantly better at lower discretizations because it is more accurate at resolving the topographic interface. For example, at a norm data error of $10^0$, the mesh aligned to the layer needed $16^3$ cells, versus $27^3$ when we used a rectangular discretization - or nearly five times the number of cells. The changes in error at coarse discretizations is due to the low accuracy in modeling the location of the sources and receivers.
 
-```{figure} figures/fv-tensor-curvilinear-compare-norms.png
+```{figure} images/fv-tensor-curvilinear-compare-norms.png
 :name: fig:fv-ex-tensor-curvilinear-compare-norms
 Comparison of norm data error for the regular mesh and the mesh aligned to the interface.
 ```
