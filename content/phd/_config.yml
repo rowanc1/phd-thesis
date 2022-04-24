@@ -26,7 +26,6 @@ numbering:
   heading_6: false
 math:
   '\dobs': '\mathbf{d}_\text{obs}'
-  '\du': '\mathbf{u}'
   '\mref': '\mathbf{m}_\text{ref}'
   '\dpred': '\mathbf{d}_\text{pred}'
   '\Wd': '\mathbf{W}_\text{d}'
