@@ -44,10 +44,10 @@ Geophysical inverse problems are motivated by the desire to extract information 
 
 ```{math}
 :label: eq:genericdatum
-F_i[\m] + \epsilon_i= d_i,
+F_i[\bfm] + \epsilon_i= d_i,
 ```
 
-where $F$ is a forward simulation operator that incorporates details of the relevant physical equations, sources, and survey design, $\m$ is a generic symbol for the inversion model, $\epsilon*{i}$ is the noise that is often assumed to have known statistics, and $d_i$ is the observed datum. In a typical geophysical survey, we are provided with the data, $d_i, i=1...N$, and some estimate of their uncertainties. The goal is to recover the model, $\m$, which is often a physical property. The data provide only a finite number of inaccurate constraints upon the sought model. Finding a model from the data alone is an ill-posed problem since no unique model exists that explains the data. Additional information must be included using prior information and assumptions (for example, downhole property logs, structural orientation information, or known interfaces {cite:p}`Fullagar2008, Li2000, lelievre2009integrating`). This prior knowledge is crucial if we are to obtain an appropriate representation of the earth and will be discussed in more detail in Section \ref{sub:inputs}.
+where $F$ is a forward simulation operator that incorporates details of the relevant physical equations, sources, and survey design, $\bfm$ is a generic symbol for the inversion model, $\epsilon*{i}$ is the noise that is often assumed to have known statistics, and $d_i$ is the observed datum. In a typical geophysical survey, we are provided with the data, $d_i, i=1...N$, and some estimate of their uncertainties. The goal is to recover the model, $\bfm$, which is often a physical property. The data provide only a finite number of inaccurate constraints upon the sought model. Finding a model from the data alone is an ill-posed problem since no unique model exists that explains the data. Additional information must be included using prior information and assumptions (for example, downhole property logs, structural orientation information, or known interfaces {cite:p}`Fullagar2008, Li2000, lelievre2009integrating`). This prior knowledge is crucial if we are to obtain an appropriate representation of the earth and will be discussed in more detail in Section \ref{sub:inputs}.
 
 Defining and solving a well-posed inverse problem is a complex task that requires many interacting components. It helps to view this task as a workflow in which various elements are explicitly identified and integrated. {numref}`Figure %s <fig:inversionOutline>` outlines the inversion methodology that consists of inputs, implementation, and evaluation. The inputs are composed of: the geophysical data; the equations, which are a mathematical description of the governing physics; and, prior knowledge or assumptions about the setting. The implementation consists of two broad categories: the forward simulation and the inversion. The forward simulation is the means by which we solve the governing equations, given a model, and the inversion components evaluate and update this model. We are considering a gradient-based approach, which updates the model through an optimization routine. The output of this implementation is a model, which, prior to interpretation, must be evaluated. This requires considering, and often re-assessing, the choices and assumptions made in both the input and the implementation stages. In this chapter, our primary concern is the implementation component; that is, how the forward simulation and inversion are carried out numerically. As a prelude to discussing how the {sc}`SimPEG` software is implemented, we step through the elements in {numref}`Figure %s <fig:inversionOutline>`, considering a Tikhonov-style inversion.
 
@@ -87,16 +87,16 @@ In this section, we outline the components necessary to formulate a well-posed i
 
 ### Forward simulation
 
-The ability to carry out an inversion presupposes the ability to run a forward simulation and create predicted data, given a physical property model. In forward simulation, we wish to compute $F[\m]=\dpred$. The operator, $F$, simulates the specific measurements taken in a geophysical survey, using the governing equations. The survey refers to all details regarding the field experiment that we need to simulate the data. The forward simulation of DC resistivity data requires knowledge of the topography, the resistivity of the earth, and the survey details, including locations of the current and potential electrodes, the source waveform, the units of the observations, and the polarity of data (since interchanging negative and positive electrodes may sometimes occur in the field). To complete the simulation, we need to solve our governing equations using the physical property model, $\m$, that is provided. In the DC resistivity experiment, our partial differential equation, with supplied boundary conditions, is solved with an appropriate numerical method; for example, finite volumes, finite elements, integral equations, or semi-analytic methods for 1D problems. In any case, we must discretize the earth onto an appropriate numerical forward simulation mesh, ({math}`\text{mesh}_F`). The size of the cells will depend upon the structure of the physical property model, topography, and the distance between sources and receivers. Cells in {math}`\text{mesh}_F` must be small enough, and the domain large enough, to achieve sufficient numerical accuracy. Proper mesh design is crucial so that numerical modeling errors are below a prescribed threshold value (cf. {cite:t}`haber2015computational`).
+The ability to carry out an inversion presupposes the ability to run a forward simulation and create predicted data, given a physical property model. In forward simulation, we wish to compute $F[\bfm]=\dpred$. The operator, $F$, simulates the specific measurements taken in a geophysical survey, using the governing equations. The survey refers to all details regarding the field experiment that we need to simulate the data. The forward simulation of DC resistivity data requires knowledge of the topography, the resistivity of the earth, and the survey details, including locations of the current and potential electrodes, the source waveform, the units of the observations, and the polarity of data (since interchanging negative and positive electrodes may sometimes occur in the field). To complete the simulation, we need to solve our governing equations using the physical property model, $\bfm$, that is provided. In the DC resistivity experiment, our partial differential equation, with supplied boundary conditions, is solved with an appropriate numerical method; for example, finite volumes, finite elements, integral equations, or semi-analytic methods for 1D problems. In any case, we must discretize the earth onto an appropriate numerical forward simulation mesh, ({math}`\text{mesh}_F`). The size of the cells will depend upon the structure of the physical property model, topography, and the distance between sources and receivers. Cells in {math}`\text{mesh}_F` must be small enough, and the domain large enough, to achieve sufficient numerical accuracy. Proper mesh design is crucial so that numerical modeling errors are below a prescribed threshold value (cf. {cite:t}`haber2015computational`).
 
 In general, we can write our governing equations in the form of:
 
 ```{math}
 :label: eq:fwdmodel
-C(\mathbf{m}, \mathbf{u}) = 0,
+C(\bfm, \bfu) = 0,
 ```
 
-where $\m$ is the modeled physical property and $\u$ are the fields and/or fluxes. $C$ is often given by a partial differential equation or a set of partial differential equations. Information about the sources and appropriate boundary conditions are included in $C$. This system is solved for $\u$ and the predicted data are extracted from $\u$ via a projection (or functional), $\dpred = P[\u]$. The ability to simulate the geophysical problem and generate predicted data is a crucial building block. Accuracy and efficiency are essential, since many forward problems must be evaluated when carrying out any inversion.
+where $\bfm$ is the modeled physical property and $\bfu$ are the fields and/or fluxes. $C$ is often given by a partial differential equation or a set of partial differential equations. Information about the sources and appropriate boundary conditions are included in $C$. This system is solved for $\bfu$ and the predicted data are extracted from $\bfu$ via a projection (or functional), $\dpred = P[\bfu]$. The ability to simulate the geophysical problem and generate predicted data is a crucial building block. Accuracy and efficiency are essential, since many forward problems must be evaluated when carrying out any inversion.
 
 ### Inversion elements
 
@@ -115,12 +115,12 @@ The data misfit is a measure of how well the data predicted by a given model rep
 
 ```{math}
 :label: eq:phid
-\phi*d(\m) = \frac{1}{2}\|\Wd (F[\m] - \dobs) \|^2_2.
+\phi*d(\bfm) = \frac{1}{2}\|\Wd (F[\bfm] - \dobs) \|^2_2.
 ```
 
-Here, $F[\m]$ is a forward modeling that produces predicted data, $\dpred$, as in equation: {eq}`eq:genericdatum`. $\Wd$ is a diagonal matrix whose elements are equal to ${\bf W}*{d\_{ii}}=1/\epsilon_i$, where $\epsilon_i$ is an estimated standard deviation of the $i${sup}`th` datum. It is important to think carefully when assigning these estimates. A good option is to assign a $\epsilon_i = floor + \%|d_i|$. Percentages are generally required when there is a large dynamic range of the data. A percentage alone can cause great difficulty for the inversion if a particular datum acquires a value close to zero; therefore, we include a floor.
+Here, $F[\bfm]$ is a forward modeling that produces predicted data, $\dpred$, as in equation: {eq}`eq:genericdatum`. $\Wd$ is a diagonal matrix whose elements are equal to ${\bf W}*{d\_{ii}}=1/\epsilon_i$, where $\epsilon_i$ is an estimated standard deviation of the $i${sup}`th` datum. It is important to think carefully when assigning these estimates. A good option is to assign a $\epsilon_i = floor + \%|d_i|$. Percentages are generally required when there is a large dynamic range of the data. A percentage alone can cause great difficulty for the inversion if a particular datum acquires a value close to zero; therefore, we include a floor.
 
-In addition to a metric that evaluates the size of the misfit, we also require a tolerance, $\phi_d^*$. We consider that models satisfying $\phi_d(\mathbf{m}) \leq \phi_d^*$ adequately fit the data {cite:p}`parker1994`. If the data errors are Gaussian and we have assigned the correct standard deviations, then the expected value of $\phi_d^* \approx N$, where $N$ is the number of data. Finding a model that has a misfit substantially lower than this will result in a solution that has excessive and erroneous structure; that is, we are fitting the noise. Finding a model that has a misfit substantially larger than this will yield a model that is missing structure that could have been extracted from the data (see {cite:t}`DougTutorial` for a tutorial).
+In addition to a metric that evaluates the size of the misfit, we also require a tolerance, $\phi_d^*$. We consider that models satisfying $\phi_d(\bfm) \leq \phi_d^*$ adequately fit the data {cite:p}`parker1994`. If the data errors are Gaussian and we have assigned the correct standard deviations, then the expected value of $\phi_d^* \approx N$, where $N$ is the number of data. Finding a model that has a misfit substantially lower than this will result in a solution that has excessive and erroneous structure; that is, we are fitting the noise. Finding a model that has a misfit substantially larger than this will yield a model that is missing structure that could have been extracted from the data (see {cite:t}`DougTutorial` for a tutorial).
 
 The choice of misfit in equation {eq}`eq:phid` is not the only possibility for a misfit measure. If data errors are correlated, then $\Wd$ is the square root of the data covariance matrix and it will have off-diagonal terms. Often useful in practice is recognizing if the noise statistics are non-Gaussian. Incorporating robust statistical measures, like $l_p$ norms with $p \approx 1$, are useful for handling outliers {cite:p}`ekblom1973calculation, Farquharson1998`.
 
@@ -130,7 +130,7 @@ The second essential inversion element is defining the regularization functional
 
 ```{math}
 :label: eq:phim
-\phi*m(\m)= \frac{1}{2}\|\Wm(\m-\mref)\|^2_2.
+\phi_m(\bfm)= \frac{1}{2}\|\Wm(\bfm-\mref)\|^2_2.
 ```
 
 $\mathbf{W_m}$ is a matrix and $\mref$ is a reference model (which could be zero). The matrix $\mathbf{W_m}$ can be a stacked combination of matrices weighted by $\alpha_*$:
@@ -165,20 +165,20 @@ The potential to have different norms tailored to a specific problem, with the a
 
 The purpose of this section is to pose our inverse problem in a mathematically precise way and to provide a methodology by which a solution can be achieved. In the work that follows, we outline a specific methodology that we will later demonstrate. We formulate the inverse problem as a problem in optimization, where we define an objective function, based on the data misfit and model regularization, and aim to find a model which sufficiently minimizes it. Many variants of this formulation are possible.
 
-At this stage of the workflow, we have on hand all of the necessary components for formulating the inverse problem as an optimization problem. We have the capability to forward model and generate predicted data, assess the data misfit using $\phi_d$, and a tolerance on the data misfit has already been specified. A regularization functional, $\phi_m$, and additional strong constraints on the model have been identified, such as upper and lower bounds: $\m^L_i \le \m_i \le \m^H_i$. The sought model is one that minimizes $\phi_m$ and also reduces the data misfit to some tolerance, $\phi_d^*$. However, a reduction in data misfit requires that the model have increased structure, which typically is at odds with the assumptions we impose in the construction of $\phi_m$, meaning that the $\phi_d$ and $\phi_m$ are antagonistic. To address this and still pose the inversion as an optimization problem, we design a composite objective function:
+At this stage of the workflow, we have on hand all of the necessary components for formulating the inverse problem as an optimization problem. We have the capability to forward model and generate predicted data, assess the data misfit using $\phi_d$, and a tolerance on the data misfit has already been specified. A regularization functional, $\phi_m$, and additional strong constraints on the model have been identified, such as upper and lower bounds: $\bfm^L_i \le \bfm_i \le \bfm^H_i$. The sought model is one that minimizes $\phi_m$ and also reduces the data misfit to some tolerance, $\phi_d^*$. However, a reduction in data misfit requires that the model have increased structure, which typically is at odds with the assumptions we impose in the construction of $\phi_m$, meaning that the $\phi_d$ and $\phi_m$ are antagonistic. To address this and still pose the inversion as an optimization problem, we design a composite objective function:
 
 ```{math}
 :label: eq:Phi
-\phi(\m) = \phi*d(\m) + \beta \phi_m(\m),
+\phi(\bfm) = \phi*d(\bfm) + \beta \phi_m(\bfm),
 ```
 
-where $\beta$ is a positive constant. It is often referred to as the trade-off parameter, regression parameter, regularization parameter, or Tikhonov parameter {cite:p}`tikhonov1977`. When $\beta$ is very large, the minimization of $\phi(\m)$ produces a model that minimizes the regularization term and yields a large $\phi_d(\m)$. Alternatively, when $\beta$ is very small, minimization of $\phi(\m)$ produces a model that fits the data very well but is contaminated with excessive structure so that $\phi_m(\m)$ is large. The inverse problem is posed as:
+where $\beta$ is a positive constant. It is often referred to as the trade-off parameter, regression parameter, regularization parameter, or Tikhonov parameter {cite:p}`tikhonov1977`. When $\beta$ is very large, the minimization of $\phi(\bfm)$ produces a model that minimizes the regularization term and yields a large $\phi_d(\bfm)$. Alternatively, when $\beta$ is very small, minimization of $\phi(\bfm)$ produces a model that fits the data very well but is contaminated with excessive structure so that $\phi_m(\bfm)$ is large. The inverse problem is posed as:
 
 ```{math}
 :label: eq:invoptimization
 \begin{split}
-&\minimize{\m} \quad \phi(\m) = \phi_d(\m) + \beta \phi_m(\m) \\
-&\rm{s.t.} \quad \phi_d \le \phi_d^*, \quad \m^L_i \le \m_i \le \m^H_i.
+&\minimize{\bfm} \quad \phi(\bfm) = \phi_d(\bfm) + \beta \phi_m(\bfm) \\
+&\rm{s.t.} \quad \phi_d \le \phi_d^*, \quad \bfm^L_i \le \bfm_i \le \bfm^H_i.
 \end{split}
 ```
 
@@ -187,35 +187,35 @@ Since the value of $\beta$ is not known _a priori_, the above optimization probl
 The optimization posed in equation {eq}`eq:invoptimization` is almost always non-linear. It is linear only in a special case, where the forward mapping is a linear functional of the model, $\phi_m$ and $\phi_d$ are written as $l_2$ norms, $\beta$ is known, and there are no imposed bound constraints. This rarely happens in practice, requiring that iterative optimization methods be employed to find a solution. Gradient-based methods are commonly used and we refer the reader to {cite:t}`Nocedal1999` for background and introductions to the relevant literature. For geophysical problems, Gauss-Newton techniques have proven to be valuable and practical. For $l_2$ norms, we write the objective function as:
 
 ```{math}
-\phi(\m) = \frac{1}{2}||\Wd(F[\m]-\dobs)||^2*2 + \frac{1}{2} \beta ||\Wm(\m-\mref)||^2_2.
+\phi(\bfm) = \frac{1}{2}||\Wd(F[\bfm]-\dobs)||^2*2 + \frac{1}{2} \beta ||\Wm(\bfm-\mref)||^2_2.
 ```
 
 The gradient is given by:
 
 ```{math}
-g(\m)= J[\m]^\top \Wd^\top \Wd(F[\m]-\dobs) + \beta \Wm^\top \Wm (\m-\mref),
+g(\bfm)= J[\bfm]^\top \Wd^\top \Wd(F[\bfm]-\dobs) + \beta \Wm^\top \Wm (\bfm-\mref),
 ```
 
-where $J[\m]$ is the sensitivity or Jacobian. The components, $J[\mathbf{m}]*{ij}$, specify how the $i${sup}`th` datum changes with respect to the $j${sup}`th` model parameter; these changes will be discussed in more detail in the next section. At the $k${sup}`th` iteration, beginning with a model, $\m^{k}$, we search for a perturbation, $\delta \m$, which reduces the objective function. Linearizing the forward simulation by:
+where $J[\bfm]$ is the sensitivity or Jacobian. The components, $J[\bfm]*{ij}$, specify how the $i${sup}`th` datum changes with respect to the $j${sup}`th` model parameter; these changes will be discussed in more detail in the next section. At the $k${sup}`th` iteration, beginning with a model, $\bfm^{k}$, we search for a perturbation, $\delta \bfm$, which reduces the objective function. Linearizing the forward simulation by:
 
 ```{math}
-F[\m^{k}+\delta \m] \approx F[\m^{k}] + J[\m^{k}]\delta \m
+F[\bfm^{k}+\delta \bfm] \approx F[\bfm^{k}] + J[\bfm^{k}]\delta \bfm
 ```
 
-and setting the gradient equal to zero yields the standard Gauss-Newton equations to be solved for the perturbation $\delta \m$:
+and setting the gradient equal to zero yields the standard Gauss-Newton equations to be solved for the perturbation $\delta \bfm$:
 
 ```{math}
 :label: eq:gn
-(J[\m]^\top \Wd^\top \Wd J[\m] + \beta \Wm^\top \Wm) \delta \m = -g(\m).
+(J[\bfm]^\top \Wd^\top \Wd J[\bfm] + \beta \Wm^\top \Wm) \delta \bfm = -g(\bfm).
 ```
 
 The updated model is given by:
 
 ```{math}
-\m^{k+1}=\m^{k} + \gamma \delta \m,
+\bfm^{k+1}=\bfm^{k} + \gamma \delta \bfm,
 ```
 
-where $\gamma \in (0,1]$ is a coefficient that can be found by a line search. Setting $\gamma=1$ is the default and a line search is necessary if $\phi(\m^{k+1}) \ge \phi(\m^{k})$.
+where $\gamma \in (0,1]$ is a coefficient that can be found by a line search. Setting $\gamma=1$ is the default and a line search is necessary if $\phi(\bfm^{k+1}) \ge \phi(\bfm^{k})$.
 
 The iterative optimization process is continued until a suitable stopping criterion is reached. Completion of this iterative process yields a minimization for particular value of the trade-off parameter, $\beta$. If we are invoking a cooling schedule, and if the desired misfit tolerance is not yet achieved, $\beta$ is reduced and the iterative numerical optimization procedure is repeated.
 
@@ -225,25 +225,25 @@ A central element in the above approach is the computation of the sensitivities.
 
 ```{math}
 :label: eq:J
-J[\mathbf{m}] = \frac{\partial F[\mathbf{m}]}{\partial \mathbf{m}} =
-\mathbf{P}\left(\frac{\partial\mathbf{u}}{\partial \mathbf{m}}\right)
+J[\bfm] = \frac{\partial F[\bfm]}{\partial \bfm} =
+\mathbf{P}\left(\frac{\partial\bfu}{\partial \bfm}\right)
 ```
 
-where $\bf P$ is a linear projection and $d\cdot$ indicates total difference. There are numerous approaches to computing the sensitivity, but the chosen methodologies are dictated by the size of the problem. The discrete sensitivity matrix, $\bf J$, is a dense $N \times M$ matrix, where $N$ is the number of data and $M$ is the number of model parameters. For some problems, $\bf J$ can be computed directly and stored. Ultimately, this computation and storage demands the solution of numerous forward problems (cf. {cite:t}`haber2015computational`). In another approach, we can factor $J[\m]$ in symbolic form. In the general case, we solve for the sensitivity implicitly by taking the derivative of $C(\m, \u)=0$ (equation {eq}`eq:fwdmodel`) to yield:
+where $\bf P$ is a linear projection and $d\cdot$ indicates total difference. There are numerous approaches to computing the sensitivity, but the chosen methodologies are dictated by the size of the problem. The discrete sensitivity matrix, $\bf J$, is a dense $N \times M$ matrix, where $N$ is the number of data and $M$ is the number of model parameters. For some problems, $\bf J$ can be computed directly and stored. Ultimately, this computation and storage demands the solution of numerous forward problems (cf. {cite:t}`haber2015computational`). In another approach, we can factor $J[\bfm]$ in symbolic form. In the general case, we solve for the sensitivity implicitly by taking the derivative of $C(\bfm, \bfu)=0$ (equation {eq}`eq:fwdmodel`) to yield:
 
 ```{math}
 :label: eq:dcdm-dcdu
-\nabla*\m C(\m, \u) d \m +
-\nabla_\u C(\m, \u) d \u
+\nabla*\bfm C(\bfm, \bfu) d \bfm +
+\nabla_\bfu C(\bfm, \bfu) d \bfu
 = 0,
 ```
 
-where $\nabla_{\cdot}$ indicates partial difference and both $\nabla_\m C(\m, \u)$ and $\nabla_\u C(\m, \u)$ are matrices. For a given model, $\nabla_\u C(\m, \u)$ corresponds to the forward simulation operator. If the forward problem is well-posed, then the matrix is invertible {cite:p}`haber2015computational`. Equation {eq}`eq:dcdm-dcdu` can be rearranged to:
+where $\nabla_{\cdot}$ indicates partial difference and both $\nabla_\bfm C(\bfm, \bfu)$ and $\nabla_\bfu C(\bfm, \bfu)$ are matrices. For a given model, $\nabla_\bfu C(\bfm, \bfu)$ corresponds to the forward simulation operator. If the forward problem is well-posed, then the matrix is invertible {cite:p}`haber2015computational`. Equation {eq}`eq:dcdm-dcdu` can be rearranged to:
 
 ```{math}
 :label: eq:dcdm-dcdu-rearranged
-d \u = - \left(\nabla*\u C(\m,\u)\right)^{-1}
-\nabla\_\m C(\m,\u) d \m,
+d \bfu = - \left(\nabla*\bfu C(\bfm,\bfu)\right)^{-1}
+\nabla\_\bfm C(\bfm,\bfu) d \bfm,
 ```
 
 and combined with equation {eq}`eq:J` to obtain a formula for the sensitivity matrix. We note that this matrix is dense, often large, and need not actually be formed and stored.
@@ -360,7 +360,7 @@ Here, we import the `discretize` library as well as NumPy (`np`) and SciPy's spa
 With the differential operators readily accessible across multiple mesh types, simulation of a cell-centered discretization for conductivity, $\sigma$, in the DC resistivity problem is straightforward. The discretized system of equations, {eq}`eq:dc-resistivity`, can be written as:
 
 ```{math}
-\bf A(\sigma) \mathbf{u} = D (M*{1/\sigma}^f)^{-1} D^\top \mathbf{u} = - q,
+\bf A(\sigma) \bfu = D (M*{1/\sigma}^f)^{-1} D^\top \bfu = - q,
 ```
 
 where $\bf D$ and $\bf D^\top$ are the divergence and 'gradient' operators, respectively. This equation is assuming Dirichlet boundary conditions and a weak formulation of the DC resistivity equations, as in Section \ref{sec:weakform}. The conductivity, $\sigma$, is harmonically averaged from cell-centers to cell-faces to create the matrix $\bf (M*{1/\sigma}^f)^{-1}$ {cite:p}`Pidlisecky2007`. Using our `discretize` package, this equation is written as:
@@ -374,7 +374,7 @@ Msig = mesh.getFaceInnerProduct(sigma, invProp=True, invMat=True)
 A = D*Msig*D.T
 ```
 
-The code is easy to read, looks similar to the math, can be built interactively using tools such as IPython {cite:p}`Perez2007`, and is not dependent on the dimension of mesh used. Additionally, it is decoupled from the mesh type. For example, {numref}`Figure %s <fig:threeMeshes>` is generated by solving a `DCProblem` for three different mesh types: `TensorMesh`; `TreeMesh`; and, `CurvilinearMesh`. Other than the specific mesh generation code, no other modifications to the DC problem were necessary (see the online examples provided in {sc}`SimPEG`). Given the electrode locations, a $\bf q$ can be constructed on each mesh and the system, $\bf A(\sigma) \mathbf{u} = - q$, can be solved.
+The code is easy to read, looks similar to the math, can be built interactively using tools such as IPython {cite:p}`Perez2007`, and is not dependent on the dimension of mesh used. Additionally, it is decoupled from the mesh type. For example, {numref}`Figure %s <fig:threeMeshes>` is generated by solving a `DCProblem` for three different mesh types: `TensorMesh`; `TreeMesh`; and, `CurvilinearMesh`. Other than the specific mesh generation code, no other modifications to the DC problem were necessary (see the online examples provided in {sc}`SimPEG`). Given the electrode locations, a $\bf q$ can be constructed on each mesh and the system, $\bf A(\sigma) \bfu = - q$, can be solved.
 There are many excellent packages available to solve matrix equations and we have created a library to interface many of these direct and iterative solvers. The package, `pymatsolver`, comes with a few different types of `Solver` objects that provide a simple and common interface to Super-LU, Paradiso, and Mumps as well as including a few simple preconditioners for iterative solvers, {cite:t}`superlu,pardiso,mumps,petsc`.
 
 % programs/dc-solver
@@ -420,7 +420,7 @@ The forward simulation in {sc}`SimPEG` is broken up into a `Survey` class and a 
   - Maps the model to a physical property
 ```
 
-The crucial aspects of the `Problem` class are shown in {numref}`Table %s <table:Problem>` and the properties and methods of the `Survey` class are shown in {numref}`Table %s <table:Survey>`. We note that each of the sub-classes of `Problem` will implement fields and sensitivities in a different way, likely with additional methods and properties. Furthermore, the choice of terminology becomes clearer when these classes are inherited and used in a specific geophysical method (e.g. a `DCProblem` or `EMProblem`). For the `DCProblem`, the `fields` can be created by constructing $\mathbf{A(m)}$ and solving with the source terms, $\mathbf{Q}$, which will be provided by the `DCSurvey`'s source list (`srcList`). Each source has at least one receiver associated with it and the receivers can create a matrix, $\mathbf{P}$, which project the fields, $\mathbf{u}$, onto the data-space. For example, in the DC problem, a dipole receiver samples the potential at each electrode location and computes the difference to give a datum. We note that the process of computing a datum may be more involved and have derivatives with respect the computed fields and, possibly, the model. We solve much of the organizational bottlenecks through general receiver and source classes, which can be inherited and tailored to the specific application. The `mapping` in the `Problem` provides a transformation from an arbitrary model to a discretized grid function of physical properties. For example, log-conductivity is often used in the inverse problem for DC resistivity, rather than parameterizing directly in terms of conductivity. If this choice is made for the model, an appropriate map (i.e. the exponential) must be provided to transform from the model space to the physical property space (cf. {cite:t}`HeagySEG2014`).
+The crucial aspects of the `Problem` class are shown in {numref}`Table %s <table:Problem>` and the properties and methods of the `Survey` class are shown in {numref}`Table %s <table:Survey>`. We note that each of the sub-classes of `Problem` will implement fields and sensitivities in a different way, likely with additional methods and properties. Furthermore, the choice of terminology becomes clearer when these classes are inherited and used in a specific geophysical method (e.g. a `DCProblem` or `EMProblem`). For the `DCProblem`, the `fields` can be created by constructing $\mathbf{A(m)}$ and solving with the source terms, $\mathbf{Q}$, which will be provided by the `DCSurvey`'s source list (`srcList`). Each source has at least one receiver associated with it and the receivers can create a matrix, $\mathbf{P}$, which project the fields, $\bfu$, onto the data-space. For example, in the DC problem, a dipole receiver samples the potential at each electrode location and computes the difference to give a datum. We note that the process of computing a datum may be more involved and have derivatives with respect the computed fields and, possibly, the model. We solve much of the organizational bottlenecks through general receiver and source classes, which can be inherited and tailored to the specific application. The `mapping` in the `Problem` provides a transformation from an arbitrary model to a discretized grid function of physical properties. For example, log-conductivity is often used in the inverse problem for DC resistivity, rather than parameterizing directly in terms of conductivity. If this choice is made for the model, an appropriate map (i.e. the exponential) must be provided to transform from the model space to the physical property space (cf. {cite:t}`HeagySEG2014`).
 
 % tables/simpeg/survey
 
@@ -466,13 +466,13 @@ Here the `srcList` is a list of dipole sources (`DC.SrcDipole`), each of which c
 
 ## Sensitivities
 
-The sensitivity and adjoint will be used in the optimization routine of the inversion. Inefficient or inaccurate calculation of the sensitivities can lead to an extremely slow inversion. This is critical in large-scale inversions, where the dense sensitivity matrix may be too large to hold in memory directly. As discussed in the methodology section, the sensitivity matrix need not be explicitly created when using an iterative optimization algorithm, such as Gauss-Newton ({eq}`eq:gn`), solved with a conjugate gradient approach. The calculation of vector products with the sensitivity matrices is an important aspect of {sc}`SimPEG`, which has many tools to make construction and testing of these matrices modular and simple. For the DC resistivity example, the discretized governing equations are written as: $C(\mathbf{m},\mathbf{u}) = \bf A(\m)\u - q = 0$. We can implement the sensitivity equations {eq}`eq:J` and {eq}`eq:dcdm-dcdu-rearranged` to yield:
+The sensitivity and adjoint will be used in the optimization routine of the inversion. Inefficient or inaccurate calculation of the sensitivities can lead to an extremely slow inversion. This is critical in large-scale inversions, where the dense sensitivity matrix may be too large to hold in memory directly. As discussed in the methodology section, the sensitivity matrix need not be explicitly created when using an iterative optimization algorithm, such as Gauss-Newton ({eq}`eq:gn`), solved with a conjugate gradient approach. The calculation of vector products with the sensitivity matrices is an important aspect of {sc}`SimPEG`, which has many tools to make construction and testing of these matrices modular and simple. For the DC resistivity example, the discretized governing equations are written as: $C(\bfm,\bfu) = \bf A(\bfm)\bfu - q = 0$. We can implement the sensitivity equations {eq}`eq:J` and {eq}`eq:dcdm-dcdu-rearranged` to yield:
 
 ```{math}
-\mathbf{J} = - \mathbf{P}(\mathbf{A}(\mathbf{m})^{-1} \nabla_\mathbf{m} C(\mathbf{m},\mathbf{u})),
+\mathbf{J} = - \mathbf{P}(\mathbf{A}(\bfm)^{-1} \nabla_\bfm C(\bfm,\bfu)),
 ```
 
-where $\nabla_\m C(\mathbf{m},\mathbf{u})$ is a known sparse matrix, $\bf A(m)$ is the forward operator and is equivalent to $\nabla_\u C(\mathbf{m},\mathbf{u})$, and $\bf P$ is a projection matrix (cf. {cite:t}`Pidlisecky2007`). Each matrix in this expression is sparse and can be explicitly formed; however, the product is dense and holding it in memory may not be possible. If an iterative solver is used in the optimization, only matrix vector products are necessary and the sensitivity need not be explicitly calculated or stored. Program \ref{prog:dc-sensitivity} outlines the calculation of `Jvec`, given a model, `m`, the fields, `u`, and a vector to multiply, `v`. In Program \ref{prog:dc-sensitivity}, we draw the distinction between the model, `m`, and the conductivity, `sig`, which are connected through a mapping, $\sigma = \mathcal{M}(\m)$, and associated derivatives. The matrix, $\nabla_\m C(\mathbf{m}, \mathbf{u})$, is denoted `dCdm` and formed by looping over each source in the DC resistivity survey.
+where $\nabla_\bfm C(\bfm,\bfu)$ is a known sparse matrix, $\bf A(m)$ is the forward operator and is equivalent to $\nabla_\bfu C(\bfm,\bfu)$, and $\bf P$ is a projection matrix (cf. {cite:t}`Pidlisecky2007`). Each matrix in this expression is sparse and can be explicitly formed; however, the product is dense and holding it in memory may not be possible. If an iterative solver is used in the optimization, only matrix vector products are necessary and the sensitivity need not be explicitly calculated or stored. Program \ref{prog:dc-sensitivity} outlines the calculation of `Jvec`, given a model, `m`, the fields, `u`, and a vector to multiply, `v`. In Program \ref{prog:dc-sensitivity}, we draw the distinction between the model, `m`, and the conductivity, `sig`, which are connected through a mapping, $\sigma = \mathcal{M}(\bfm)$, and associated derivatives. The matrix, $\nabla_\bfm C(\bfm, \bfu)$, is denoted `dCdm` and formed by looping over each source in the DC resistivity survey.
 
 %programs/dc-jvec
 
@@ -495,7 +495,7 @@ def Jvec(self, m, v, u=None):
     # Derivative of model transform, $\frac{\partial \sigma}{\partial \mathbf{m}}$
     dsigdm_x_v = self.curModel.transformDeriv * v
 
-    # Take derivative of $C(\mathbf{m}, \mathbf{u})$ w.r.t. $\mathbf{m}$
+    # Take derivative of $C(\mathbf{m}, \bfu)$ w.r.t. $\mathbf{m}$
     dCdm_x_v = np.empty_like(u)
     # loop over fields for each transmitter
     for i in range(self.survey.nTx):
@@ -503,9 +503,9 @@ def Jvec(self, m, v, u=None):
         dAdsig         = D * self.dMdsig( G * u[:,i] )
         dCdm_x_v[:, i] = dAdsig *  dsigdm_x_v
 
-    # Take derivative of $C(\mathbf{m}, \mathbf{u})$ w.r.t. $\mathbf{u}$
+    # Take derivative of $C(\mathbf{m}, \bfu)$ w.r.t. $\bfu$
     dCdu = self.A
-    # Solve for $\frac{\partial \mathbf{u}}{\partial \mathbf{m}}$
+    # Solve for $\frac{\partial \bfu}{\partial \mathbf{m}}$
     dCdu_inv = self.Solver(dCdu, **self.solverOpts)
     P        = self.survey.getP(self.mesh)
     J_x_v    = - P * mkvc( dCdu_inv * dCdm_x_v )
@@ -542,7 +542,7 @@ The `Inversion` conducts all communication between the various components of the
 
 ## DC resistivity inversion
 
-We will build on the example presented in Section \ref{sec:DCforward}, which has a survey setup that only provides enough information for a vertical sounding. As such, we will decouple our 3D forward mesh and 1D inversion mesh and connect them through a mapping (cf. {cite:t}`KangSEG2015`). Additionally, since electrical conductivity is a log-varying parameter, we will also construct a model space that is optimized in log space. Both of these model transformations will be handled with a single map, $\mathcal{M}$, where $\boldsymbol{\sigma} = \mathcal{M}(\mathbf{m})$.
+We will build on the example presented in Section \ref{sec:DCforward}, which has a survey setup that only provides enough information for a vertical sounding. As such, we will decouple our 3D forward mesh and 1D inversion mesh and connect them through a mapping (cf. {cite:t}`KangSEG2015`). Additionally, since electrical conductivity is a log-varying parameter, we will also construct a model space that is optimized in log space. Both of these model transformations will be handled with a single map, $\mathcal{M}$, where $\boldsymbol{\sigma} = \mathcal{M}(\bfm)$.
 
 % programs/maps-vertical1d
 
