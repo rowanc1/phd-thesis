@@ -1,20 +1,6 @@
 ---
 title: Acknowledgments
 description: The interdisciplinary work that I completed during my PhD at the University of British Columbia would not of been possible without the enthusiastic support from a tremendous and diverse group of individuals.
-date: 2017-12-22T00:00:00.000Z
-authors:
-  - name: Rowan Cockett
-    userId: vKndfPAZO7WeFxLH1GQcpnXPzfH3
-    orcid: 0000-0002-7859-8394
-    corresponding: true
-    email: rcockett@eoas.ubc.ca
-    roles: null
-    affiliations:
-      - University of British Columbia
-journal: PhD Thesis
-open_access: true
-license: CC-BY-4.0
-doi: 10.14288/1.0362383
 numbering: false
 ---
 

@@ -1,29 +1,9 @@
 ---
 title: Simulation & Inversion Framework
 description: A framework for simulation and parameter estimation for geophysical applications.
-date: 2017-12-22T00:00:00.000Z
-authors:
-  - name: Rowan Cockett
-    userId: vKndfPAZO7WeFxLH1GQcpnXPzfH3
-    orcid: 0000-0002-7859-8394
-    corresponding: true
-    email: rcockett@eoas.ubc.ca
-    roles: null
-    affiliations:
-      - University of British Columbia
 subject: Chapter 2
-journal: PhD Thesis
-open_access: true
-license: CC-BY-4.0
-doi: 10.14288/1.0362383
 numbering:
   enumerator: 2.%s
-  heading_1: true
-  heading_2: true
-  heading_3: false
-  heading_4: false
-  heading_5: false
-  heading_6: false
 ---
 
 +++
@@ -64,7 +44,7 @@ Geophysical inverse problems are motivated by the desire to extract information 
 
 ```{math}
 :label: eq:genericdatum
-F*i[\m] + \epsilon_i= d_i,
+F_i[\m] + \epsilon_i= d_i,
 ```
 
 where $F$ is a forward simulation operator that incorporates details of the relevant physical equations, sources, and survey design, $\m$ is a generic symbol for the inversion model, $\epsilon*{i}$ is the noise that is often assumed to have known statistics, and $d_i$ is the observed datum. In a typical geophysical survey, we are provided with the data, $d_i, i=1...N$, and some estimate of their uncertainties. The goal is to recover the model, $\m$, which is often a physical property. The data provide only a finite number of inaccurate constraints upon the sought model. Finding a model from the data alone is an ill-posed problem since no unique model exists that explains the data. Additional information must be included using prior information and assumptions (for example, downhole property logs, structural orientation information, or known interfaces {cite:p}`Fullagar2008, Li2000, lelievre2009integrating`). This prior knowledge is crucial if we are to obtain an appropriate representation of the earth and will be discussed in more detail in Section \ref{sub:inputs}.
@@ -219,7 +199,7 @@ g(\m)= J[\m]^\top \Wd^\top \Wd(F[\m]-\dobs) + \beta \Wm^\top \Wm (\m-\mref),
 where $J[\m]$ is the sensitivity or Jacobian. The components, $J[\mathbf{m}]*{ij}$, specify how the $i${sup}`th` datum changes with respect to the $j${sup}`th` model parameter; these changes will be discussed in more detail in the next section. At the $k${sup}`th` iteration, beginning with a model, $\m^{k}$, we search for a perturbation, $\delta \m$, which reduces the objective function. Linearizing the forward simulation by:
 
 ```{math}
-F[\m^{k}+\delta \m] \approx F[\m^{k}] + J[\m^{k}]\delta \m %+ \mathcal{O}(\delta m)^2
+F[\m^{k}+\delta \m] \approx F[\m^{k}] + J[\m^{k}]\delta \m
 ```
 
 and setting the gradient equal to zero yields the standard Gauss-Newton equations to be solved for the perturbation $\delta \m$:

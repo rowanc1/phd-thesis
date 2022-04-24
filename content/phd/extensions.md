@@ -1,29 +1,9 @@
 ---
 title: Interfaces & Extensions
-description: ''
-date: 2017-12-22T00:00:00.000Z
-authors:
-  - name: Rowan Cockett
-    userId: vKndfPAZO7WeFxLH1GQcpnXPzfH3
-    orcid: 0000-0002-7859-8394
-    corresponding: true
-    email: rcockett@eoas.ubc.ca
-    roles: null
-    affiliations:
-      - University of British Columbia
+description: Through the exploration of numerous case studies across the geophysical, hydrologic, and geologic literature, we presented a forward modelling framework.
 subject: Appendix C
-journal: PhD Thesis
-open_access: true
-license: CC-BY-4.0
-doi: 10.14288/1.0362383
 numbering:
   enumerator: C.%s
-  heading_1: true
-  heading_2: true
-  heading_3: false
-  heading_4: false
-  heading_5: false
-  heading_6: false
 ---
 
 +++

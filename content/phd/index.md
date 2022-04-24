@@ -2,20 +2,6 @@
 title: A Framework for Geophysical Inversions
 subtitle: with application to vadose zone parameter estimation
 description: PhD Thesis by Rowan Cockett, University of British Columbia, Computational Geophysics
-date: 2017-12-22T00:00:00.000Z
-authors:
-  - name: Rowan Cockett
-    userId: vKndfPAZO7WeFxLH1GQcpnXPzfH3
-    orcid: 0000-0002-7859-8394
-    corresponding: true
-    email: rcockett@eoas.ubc.ca
-    roles: null
-    affiliations:
-      - University of British Columbia
-doi: 10.14288/1.0362383
-journal: PhD Thesis
-open_access: true
-license: CC-BY-4.0
 numbering: false
 ---
 

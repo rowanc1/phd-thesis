@@ -1,29 +1,9 @@
 ---
 title: Finite Volume Techniques
-description: ''
-date: 2017-12-22T00:00:00.000Z
-authors:
-  - name: Rowan Cockett
-    userId: vKndfPAZO7WeFxLH1GQcpnXPzfH3
-    orcid: 0000-0002-7859-8394
-    corresponding: true
-    email: rcockett@eoas.ubc.ca
-    roles: null
-    affiliations:
-      - University of British Columbia
+description: Finite volume techniques for elliptic and parabolic partial differential equations that are common in electromagnetic geophysics and hydrogeologic fluid flow.
 subject: Appendix B
-journal: PhD Thesis
-open_access: true
-license: CC-BY-4.0
-doi: 10.14288/1.0362383
 numbering:
   enumerator: B.%s
-  heading_1: true
-  heading_2: true
-  heading_3: false
-  heading_4: false
-  heading_5: false
-  heading_6: false
 ---
 
 +++
@@ -168,7 +148,6 @@ to integrate the right-hand side by parts. This integration results in the discr
 ```{math}
 \left( \frac{1}{\sigma}~\vec{j}, ~\vec{f}~ \right) =
 \int_\Omega \phi \left(~\nabla \cdot \vec{f} ~ \right) - \nabla \cdot \left(  ~\phi\vec{f} ~ \right) dv
-% \left( \phi, ~\nabla \cdot \vec{f} ~ \right) - \left( \nabla \cdot ,  ~\phi\vec{f} ~ \right)
 ```
 
 Here, if we assume Dirichlet boundary conditions for $\phi \mid_{_{\partial\Omega}} = 0$, that is, the potentials are zero far away from the domain of interest, we can use the divergence theorem to eliminate the second term on the right-hand side of the equation. This results in the following equation for DC resistivity with Dirichlet boundary conditions on $\phi$:
@@ -178,7 +157,6 @@ Here, if we assume Dirichlet boundary conditions for $\phi \mid_{_{\partial\Omeg
 ```{math}
 \left( \frac{1}{\sigma}~\vec{j}, ~\vec{f}~ \right) =
 \int_\Omega \phi \left(~\nabla \cdot \vec{f} ~ \right) dv
-% \left( \phi, ~\nabla \cdot \vec{f} ~ \right) - \left( \nabla \cdot ,  ~\phi\vec{f} ~ \right)
 ```
 
 We use Dirichlet for simplicity in this example. In practice, Neumann conditions are often used because 'infinity' needs to be further away, if applying Dirichlet boundary conditions, since potential falls off as $1/r^2$ and current density as $1/r^3$.
