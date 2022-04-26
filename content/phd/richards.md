@@ -539,7 +539,7 @@ Fictitious source test in 1D showing the analytic function $\Psi_{\text{true}}$ 
 :header-rows: 1
 * - Mesh Size (n)
   - $||\Psi(x,0.5) - \Psi_{\text{true}}(x,0.5)||_\infty$
-  - Order Decrease, $\mathcal{O}(\delta)$ \\[0.5em]
+  - Order Decrease, $\mathcal{O}(\delta)$
 * - 64
   - 5.485569e+00
   - \-

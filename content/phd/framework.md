@@ -47,7 +47,7 @@ Geophysical inverse problems are motivated by the desire to extract information 
 F_i[\bfm] + \epsilon_i= d_i,
 ```
 
-where $F$ is a forward simulation operator that incorporates details of the relevant physical equations, sources, and survey design, $\bfm$ is a generic symbol for the inversion model, $\epsilon*{i}$ is the noise that is often assumed to have known statistics, and $d_i$ is the observed datum. In a typical geophysical survey, we are provided with the data, $d_i, i=1...N$, and some estimate of their uncertainties. The goal is to recover the model, $\bfm$, which is often a physical property. The data provide only a finite number of inaccurate constraints upon the sought model. Finding a model from the data alone is an ill-posed problem since no unique model exists that explains the data. Additional information must be included using prior information and assumptions (for example, downhole property logs, structural orientation information, or known interfaces {cite:p}`Fullagar2008, Li2000, lelievre2009integrating`). This prior knowledge is crucial if we are to obtain an appropriate representation of the earth and will be discussed in more detail in Section \ref{sub:inputs}.
+where $F$ is a forward simulation operator that incorporates details of the relevant physical equations, sources, and survey design, $\bfm$ is a generic symbol for the inversion model, $\epsilon_{i}$ is the noise that is often assumed to have known statistics, and $d_i$ is the observed datum. In a typical geophysical survey, we are provided with the data, $d_i, i=1...N$, and some estimate of their uncertainties. The goal is to recover the model, $\bfm$, which is often a physical property. The data provide only a finite number of inaccurate constraints upon the sought model. Finding a model from the data alone is an ill-posed problem since no unique model exists that explains the data. Additional information must be included using prior information and assumptions (for example, downhole property logs, structural orientation information, or known interfaces {cite:p}`Fullagar2008, Li2000, lelievre2009integrating`). This prior knowledge is crucial if we are to obtain an appropriate representation of the earth and will be discussed in more detail in Section \ref{sub:inputs}.
 
 Defining and solving a well-posed inverse problem is a complex task that requires many interacting components. It helps to view this task as a workflow in which various elements are explicitly identified and integrated. {numref}`Figure %s <fig:inversionOutline>` outlines the inversion methodology that consists of inputs, implementation, and evaluation. The inputs are composed of: the geophysical data; the equations, which are a mathematical description of the governing physics; and, prior knowledge or assumptions about the setting. The implementation consists of two broad categories: the forward simulation and the inversion. The forward simulation is the means by which we solve the governing equations, given a model, and the inversion components evaluate and update this model. We are considering a gradient-based approach, which updates the model through an optimization routine. The output of this implementation is a model, which, prior to interpretation, must be evaluated. This requires considering, and often re-assessing, the choices and assumptions made in both the input and the implementation stages. In this chapter, our primary concern is the implementation component; that is, how the forward simulation and inversion are carried out numerically. As a prelude to discussing how the {sc}`SimPEG` software is implemented, we step through the elements in {numref}`Figure %s <fig:inversionOutline>`, considering a Tikhonov-style inversion.
 
@@ -115,10 +115,10 @@ The data misfit is a measure of how well the data predicted by a given model rep
 
 ```{math}
 :label: eq:phid
-\phi*d(\bfm) = \frac{1}{2}\|\Wd (F[\bfm] - \dobs) \|^2_2.
+\phi_d(\bfm) = \frac{1}{2}\|\Wd (F[\bfm] - \dobs) \|^2_2.
 ```
 
-Here, $F[\bfm]$ is a forward modeling that produces predicted data, $\dpred$, as in equation: {eq}`eq:genericdatum`. $\Wd$ is a diagonal matrix whose elements are equal to ${\bf W}*{d\_{ii}}=1/\epsilon_i$, where $\epsilon_i$ is an estimated standard deviation of the $i${sup}`th` datum. It is important to think carefully when assigning these estimates. A good option is to assign a $\epsilon_i = floor + \%|d_i|$. Percentages are generally required when there is a large dynamic range of the data. A percentage alone can cause great difficulty for the inversion if a particular datum acquires a value close to zero; therefore, we include a floor.
+Here, $F[\bfm]$ is a forward modeling that produces predicted data, $\dpred$, as in equation: {eq}`eq:genericdatum`. $\Wd$ is a diagonal matrix whose elements are equal to ${\bf W}_{d\_{ii}}=1/\epsilon_i$, where $\epsilon_i$ is an estimated standard deviation of the $i${sup}`th` datum. It is important to think carefully when assigning these estimates. A good option is to assign a $\epsilon_i = floor + \%|d_i|$. Percentages are generally required when there is a large dynamic range of the data. A percentage alone can cause great difficulty for the inversion if a particular datum acquires a value close to zero; therefore, we include a floor.
 
 In addition to a metric that evaluates the size of the misfit, we also require a tolerance, $\phi_d^*$. We consider that models satisfying $\phi_d(\bfm) \leq \phi_d^*$ adequately fit the data {cite:p}`parker1994`. If the data errors are Gaussian and we have assigned the correct standard deviations, then the expected value of $\phi_d^* \approx N$, where $N$ is the number of data. Finding a model that has a misfit substantially lower than this will result in a solution that has excessive and erroneous structure; that is, we are fitting the noise. Finding a model that has a misfit substantially larger than this will yield a model that is missing structure that could have been extracted from the data (see {cite:t}`DougTutorial` for a tutorial).
 
@@ -169,7 +169,7 @@ At this stage of the workflow, we have on hand all of the necessary components f
 
 ```{math}
 :label: eq:Phi
-\phi(\bfm) = \phi*d(\bfm) + \beta \phi_m(\bfm),
+\phi(\bfm) = \phi_d(\bfm) + \beta \phi_m(\bfm),
 ```
 
 where $\beta$ is a positive constant. It is often referred to as the trade-off parameter, regression parameter, regularization parameter, or Tikhonov parameter {cite:p}`tikhonov1977`. When $\beta$ is very large, the minimization of $\phi(\bfm)$ produces a model that minimizes the regularization term and yields a large $\phi_d(\bfm)$. Alternatively, when $\beta$ is very small, minimization of $\phi(\bfm)$ produces a model that fits the data very well but is contaminated with excessive structure so that $\phi_m(\bfm)$ is large. The inverse problem is posed as:
@@ -182,12 +182,12 @@ where $\beta$ is a positive constant. It is often referred to as the trade-off p
 \end{split}
 ```
 
-Since the value of $\beta$ is not known _a priori_, the above optimization problem can be solved at many values of $\beta$ to produce a trade-off, or Tikhonov, curve (cf. {cite:t}`parker1994,hansen1998rank`). An optimum value, $\beta^*$, can be found so that minimizing equation {eq}`eq:Phi` with $\beta^*$ produces a model with misfit $\phi_d^*$. The value of $\beta^*$ can be found via cooling techniques where the $\beta$ is progressively reduced from some high value and the process stopped when the tolerance is reached or by using two-stage methods, as advocated by {{cite:t}`Parker1977`}. There are other strategies for selecting the trade-off parameter including the L-curve technique {cite:p}`hansen1992analysis`, which attempts to find the point of greatest curvature in the Tikhonov curve and Generalized Cross Validation {cite:p}`wahba1990,ghw,haber2000gcv,DougTutorial,Farquharson2004`.
+Since the value of $\beta$ is not known _a priori_, the above optimization problem can be solved at many values of $\beta$ to produce a trade-off, or Tikhonov, curve (cf. {cite:t}`parker1994,hansen1998rank`). An optimum value, $\beta^*$, can be found so that minimizing equation {eq}`eq:Phi` with $\beta^*$ produces a model with misfit $\phi_d^*$. The value of $\beta^*$ can be found via cooling techniques where the $\beta$ is progressively reduced from some high value and the process stopped when the tolerance is reached or by using two-stage methods, as advocated by {cite:t}`Parker1977`. There are other strategies for selecting the trade-off parameter including the L-curve technique {cite:p}`hansen1992analysis`, which attempts to find the point of greatest curvature in the Tikhonov curve and Generalized Cross Validation {cite:p}`wahba1990,ghw,haber2000gcv,DougTutorial,Farquharson2004`.
 
 The optimization posed in equation {eq}`eq:invoptimization` is almost always non-linear. It is linear only in a special case, where the forward mapping is a linear functional of the model, $\phi_m$ and $\phi_d$ are written as $l_2$ norms, $\beta$ is known, and there are no imposed bound constraints. This rarely happens in practice, requiring that iterative optimization methods be employed to find a solution. Gradient-based methods are commonly used and we refer the reader to {cite:t}`Nocedal1999` for background and introductions to the relevant literature. For geophysical problems, Gauss-Newton techniques have proven to be valuable and practical. For $l_2$ norms, we write the objective function as:
 
 ```{math}
-\phi(\bfm) = \frac{1}{2}||\Wd(F[\bfm]-\dobs)||^2*2 + \frac{1}{2} \beta ||\Wm(\bfm-\mref)||^2_2.
+\phi(\bfm) = \frac{1}{2}||\Wd(F[\bfm]-\dobs)||^2_2 + \frac{1}{2} \beta ||\Wm(\bfm-\mref)||^2_2.
 ```
 
 The gradient is given by:
@@ -196,7 +196,7 @@ The gradient is given by:
 g(\bfm)= J[\bfm]^\top \Wd^\top \Wd(F[\bfm]-\dobs) + \beta \Wm^\top \Wm (\bfm-\mref),
 ```
 
-where $J[\bfm]$ is the sensitivity or Jacobian. The components, $J[\bfm]*{ij}$, specify how the $i${sup}`th` datum changes with respect to the $j${sup}`th` model parameter; these changes will be discussed in more detail in the next section. At the $k${sup}`th` iteration, beginning with a model, $\bfm^{k}$, we search for a perturbation, $\delta \bfm$, which reduces the objective function. Linearizing the forward simulation by:
+where $J[\bfm]$ is the sensitivity or Jacobian. The components, $J[\bfm]_{ij}$, specify how the $i${sup}`th` datum changes with respect to the $j${sup}`th` model parameter; these changes will be discussed in more detail in the next section. At the $k${sup}`th` iteration, beginning with a model, $\bfm^{k}$, we search for a perturbation, $\delta \bfm$, which reduces the objective function. Linearizing the forward simulation by:
 
 ```{math}
 F[\bfm^{k}+\delta \bfm] \approx F[\bfm^{k}] + J[\bfm^{k}]\delta \bfm
@@ -233,7 +233,7 @@ where $\bf P$ is a linear projection and $d\cdot$ indicates total difference. Th
 
 ```{math}
 :label: eq:dcdm-dcdu
-\nabla*\bfm C(\bfm, \bfu) d \bfm +
+\nabla_\bfm C(\bfm, \bfu) d \bfm +
 \nabla_\bfu C(\bfm, \bfu) d \bfu
 = 0,
 ```
@@ -242,7 +242,7 @@ where $\nabla_{\cdot}$ indicates partial difference and both $\nabla_\bfm C(\bfm
 
 ```{math}
 :label: eq:dcdm-dcdu-rearranged
-d \bfu = - \left(\nabla*\bfu C(\bfm,\bfu)\right)^{-1}
+d \bfu = - \left(\nabla_\bfu C(\bfm,\bfu)\right)^{-1}
 \nabla\_\bfm C(\bfm,\bfu) d \bfm,
 ```
 
@@ -302,7 +302,7 @@ We will use the DC resistivity problem from geophysics to motivate and explain t
 \end{aligned}
 ```
 
-where $\sigma$ is the electrical conductivity, $\phi$ is the electric potential, and $I$ is the input current at the positive and negative dipole locations $\vec{r}*{s^\pm}$, captured as Dirac delta functions. In DC resistivity surveys, differences in the potential field, $\phi$, are sampled using dipole receivers to collect observed data. To simulate this partial differential equation (PDE) (or set of PDEs, if there are multiple current injection locations), we must discretize the equation onto a computational mesh.
+where $\sigma$ is the electrical conductivity, $\phi$ is the electric potential, and $I$ is the input current at the positive and negative dipole locations $\vec{r}_{s^\pm}$, captured as Dirac delta functions. In DC resistivity surveys, differences in the potential field, $\phi$, are sampled using dipole receivers to collect observed data. To simulate this partial differential equation (PDE) (or set of PDEs, if there are multiple current injection locations), we must discretize the equation onto a computational mesh.
 
 % (sec:framework-mesh)=
 
@@ -360,7 +360,7 @@ Here, we import the `discretize` library as well as NumPy (`np`) and SciPy's spa
 With the differential operators readily accessible across multiple mesh types, simulation of a cell-centered discretization for conductivity, $\sigma$, in the DC resistivity problem is straightforward. The discretized system of equations, {eq}`eq:dc-resistivity`, can be written as:
 
 ```{math}
-\bf A(\sigma) \bfu = D (M*{1/\sigma}^f)^{-1} D^\top \bfu = - q,
+\bf A(\sigma) \bfu = D (M_{1/\sigma}^f)^{-1} D^\top \bfu = - q,
 ```
 
 where $\bf D$ and $\bf D^\top$ are the divergence and 'gradient' operators, respectively. This equation is assuming Dirichlet boundary conditions and a weak formulation of the DC resistivity equations, as in Section \ref{sec:weakform}. The conductivity, $\sigma$, is harmonically averaged from cell-centers to cell-faces to create the matrix $\bf (M*{1/\sigma}^f)^{-1}$ {cite:p}`Pidlisecky2007`. Using our `discretize` package, this equation is written as:
