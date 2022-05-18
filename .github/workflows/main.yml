@@ -1,0 +1,13 @@
+name: Curvenote Deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to curve.space
+        uses: actions/curvenote-deploy@v1
+        env:
+          CURVENOTE_TOKEN: ${{ secrets.CURVENOTE_TOKEN }}
