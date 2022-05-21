@@ -118,7 +118,7 @@ The data misfit is a measure of how well the data predicted by a given model rep
 \phi_d(\bfm) = \frac{1}{2}\|\Wd (F[\bfm] - \dobs) \|^2_2.
 ```
 
-Here, $F[\bfm]$ is a forward modeling that produces predicted data, $\dpred$, as in equation: {eq}`eq:genericdatum`. $\Wd$ is a diagonal matrix whose elements are equal to ${\bf W}_{d\_{ii}}=1/\epsilon_i$, where $\epsilon_i$ is an estimated standard deviation of the $i${sup}`th` datum. It is important to think carefully when assigning these estimates. A good option is to assign a $\epsilon_i = floor + \%|d_i|$. Percentages are generally required when there is a large dynamic range of the data. A percentage alone can cause great difficulty for the inversion if a particular datum acquires a value close to zero; therefore, we include a floor.
+Here, $F[\bfm]$ is a forward modeling that produces predicted data, $\dpred$, as in equation: {eq}`eq:genericdatum`. $\Wd$ is a diagonal matrix whose elements are equal to ${\bf W}_{d_{ii}}=1/\epsilon_i$, where $\epsilon_i$ is an estimated standard deviation of the $i${sup}`th` datum. It is important to think carefully when assigning these estimates. A good option is to assign a $\epsilon_i = floor + \%|d_i|$. Percentages are generally required when there is a large dynamic range of the data. A percentage alone can cause great difficulty for the inversion if a particular datum acquires a value close to zero; therefore, we include a floor.
 
 In addition to a metric that evaluates the size of the misfit, we also require a tolerance, $\phi_d^*$. We consider that models satisfying $\phi_d(\bfm) \leq \phi_d^*$ adequately fit the data {cite:p}`parker1994`. If the data errors are Gaussian and we have assigned the correct standard deviations, then the expected value of $\phi_d^* \approx N$, where $N$ is the number of data. Finding a model that has a misfit substantially lower than this will result in a solution that has excessive and erroneous structure; that is, we are fitting the noise. Finding a model that has a misfit substantially larger than this will yield a model that is missing structure that could have been extracted from the data (see {cite:t}`DougTutorial` for a tutorial).
 
@@ -243,7 +243,7 @@ where $\nabla_{\cdot}$ indicates partial difference and both $\nabla_\bfm C(\bfm
 ```{math}
 :label: eq:dcdm-dcdu-rearranged
 d \bfu = - \left(\nabla_\bfu C(\bfm,\bfu)\right)^{-1}
-\nabla\_\bfm C(\bfm,\bfu) d \bfm,
+\nabla_\bfm C(\bfm,\bfu) d \bfm,
 ```
 
 and combined with equation {eq}`eq:J` to obtain a formula for the sensitivity matrix. We note that this matrix is dense, often large, and need not actually be formed and stored.
