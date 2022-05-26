@@ -3,7 +3,8 @@ sync: []
 web:
   name: Rowan Cockett - PhD Thesis
   domains:
-    - rowanc1.curve.space
+    - rowanc1-phd.curve.space
+    - phd.row1.ca
   logo: public/logo.svg
   logoText: PhD Thesis
   twitter: rowancockett
