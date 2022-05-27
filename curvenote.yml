@@ -1,6 +1,5 @@
 version: 1
-sync: []
-web:
+site:
   name: Rowan Cockett - PhD Thesis
   domains:
     - rowanc1-phd.curve.space
@@ -11,11 +10,10 @@ web:
   nav:
     - title: PhD
       url: /phd
-  sections:
-    - title: A Framework for Geophysical Inversions
-      folder: content/phd
-      path: content/phd
+  projects:
+    - path: content/phd
+      slug: phd
   actions:
     - title: Download Thesis
-      static: true
       url: ubc_2018_february_cockett_archarowan.pdf
+      static: true

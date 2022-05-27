@@ -1,0 +1,68 @@
+version: 1
+project:
+  title: A Framework for Geophysical Inversions
+  frontmatter:
+    venue: PhD Thesis
+    github: rowanc1/phd-thesis-myst
+    open_access: true
+    license: CC-BY-4.0
+    doi: 10.14288/1.0362383
+    date: 2017-12-22T00:00:00.000Z
+    authors:
+      - name: Rowan Cockett
+        userId: vKndfPAZO7WeFxLH1GQcpnXPzfH3
+        orcid: 0000-0002-7859-8394
+        corresponding: true
+        email: rcockett@eoas.ubc.ca
+        roles: null
+        affiliations:
+          - University of British Columbia
+    numbering:
+      figure: true
+      equation: true
+      code: true
+      table: true
+      heading_1: true
+      heading_2: true
+      heading_3: false
+      heading_4: false
+      heading_5: false
+      heading_6: false
+    math:
+      '\dobs': '\mathbf{d}_\text{obs}'
+      '\mref': '\mathbf{m}_\text{ref}'
+      '\dpred': '\mathbf{d}_\text{pred}'
+      '\Wd': '\mathbf{W}_\text{d}'
+      '\Wm': '\mathbf{W}_\text{m}'
+      '\div': '\nabla\cdot\,'
+      '\grad': '\vec \nabla'
+      '\curl': '{\vec \nabla}\times\,'
+      '\dcurl': '{\mathbf C}'
+      '\dgrad': '{\mathbf G}'
+      '\minimize': '\mathop{\hbox{minimize}}_{#1}'
+      '\deriv': '\frac{d #1}{d #2}'
+      '\bfA': '\mathbf{A}'
+      '\bfB': '\mathbf{B}'
+      '\bfD': '\mathbf{D}'
+      '\bfJ': '\mathbf{J}'
+      '\bfP': '\mathbf{P}'
+      '\bfV': '\mathbf{V}'
+      '\bff': '\mathbf{f}'
+      '\bfk': '\mathbf{k}'
+      '\bfm': '\mathbf{m}'
+      '\bfu': '\mathbf{u}'
+      '\bfv': '\mathbf{v}'
+      '\bfw': '\mathbf{w}'
+      '\bfy': '\mathbf{y}'
+      '\bfz': '\mathbf{z}'
+      '\bfpsi': '\boldsymbol{\psi}'
+      '\bfPsi': '\boldsymbol{\Psi}'
+      '\bftheta': '\boldsymbol{\theta}'
+      '\FF': 'F'
+      '\n': '^{n}'
+      '\nn': '^{n+1}'
+      '\nnm': '^{n+1,m}'
+      '\nnmm': '^{n+1,m+1}'
+      '\bfdo': '\mathbf{d}_{\rm obs}'
+      '\bfdp': '\mathbf{d}_{\rm pred}'
+      '\diag': '\,\text{diag}\left( #1 \right)'
