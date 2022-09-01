@@ -83,7 +83,7 @@ These curves are unknown at every point in space in the inverse problem. We will
 
 % tables/richards/van-genuchten
 
-```{list-table} Canonical soil parameters for the water retention and hydraulic conductivity curves {cite:p}van1991retc
+```{list-table} Canonical soil parameters for the water retention and hydraulic conductivity curves [@van1991retc]
 :name: table:van-genuchten
 :header-rows: 1
 * - Soil Type
@@ -189,12 +189,13 @@ In the following sections, we will be estimating the van Genuchten parameters ($
 
 ```{figure} images/richards-objfun-saturation.png
 :name: fig:richards-objfun-sat
-Objective function cross sections plotted for all ten cross sections through the five dimensional space of
-$K_s, \theta_r, \theta_s, \alpha$ and $n$. Each cross section was simulated with $40 \times 40$ simulations
+:width: 100%
+Objective function cross-sections plotted for all ten cross-sections through the five dimensional space of
+$K_s, \theta_r, \theta_s, \alpha$ and $n$. Each cross-section was simulated with $40 \times 40$ simulations
 and compared using an $l_2$ data objective function. The results are shown in $log_{10}$-scale.
 ```
 
-This analysis of the objective function shows that all of the cross-sections around the global minima are convex (albeit highly elongated in some axes). If local minima exist, these are not located on cross sections through the true soil parameters. However, as seen in {numref}`Figure %s <fig:richards-k-fun>` and {numref}`Figure %s <fig:richards-theta-fun>`, at a single soil water potential, a change in any parameter can raise or lower the functions for hydraulic conductivity and water content. If only a small portion of each curve is examined by the experimental setup (i.e. boundary and initial conditions and measurement locations), then the recovery of these parameters will be non-unique. In the following sections, we will release the assumptions of a homogeneous soil and investigate the recovery of distributed soil parameters in a one-dimensional soil profile.
+This analysis of the objective function shows that all of the cross-sections around the global minima are convex (albeit highly elongated in some axes). If local minima exist, these are not located on cross-sections through the true soil parameters. However, as seen in {numref}`Figure %s <fig:richards-k-fun>` and {numref}`Figure %s <fig:richards-theta-fun>`, at a single soil water potential, a change in any parameter can raise or lower the functions for hydraulic conductivity and water content. If only a small portion of each curve is examined by the experimental setup (i.e. boundary and initial conditions and measurement locations), then the recovery of these parameters will be non-unique. In the following sections, we will release the assumptions of a homogeneous soil and investigate the recovery of distributed soil parameters in a one-dimensional soil profile.
 
 # Layered soil profile
 
@@ -281,7 +282,7 @@ The recovery of $\theta_s$ is the most robust in the infiltration experiment con
 
 % \mathbf{m}_{K_s} = \mathcal{M}_{exp} ( \mathbf{P}_{K_s} \mathbf{P}_{\text{layers}} ) \mathbf{m}
 
-% (sec:richards-examples)=
+(sec:richards-examples)=
 
 # Three dimensional inversion
 
@@ -291,7 +292,7 @@ For the inverse problem solved here, we assume that time-lapse water-content inf
 
 ```{figure} images/richards-3d-model.png
 :name: fig:richards-3d-model
-Soil structure in three dimensions showing four sections and the boundary between two soil types of sand (yellow) and loamy sand (purple). The two cross sections and the shallower depth section are shown in subsequent figures.
+Soil structure in three dimensions showing four sections and the boundary between two soil types of sand (yellow) and loamy sand (purple). The two cross-sections and the shallower depth section are shown in subsequent figures.
 ```
 
 ## Results
@@ -314,7 +315,7 @@ For the inverse problem, we are interested in the distribution of soil types tha
 
 ```{figure} images/richards-inversion3d-results.png
 :name: fig:richards-inversion3d-results
-The 3D distributed saturated hydraulic conductivity model recovered from the inversion compared to the (a) synthetic model map view section, using (b) the same map view section, (c) an X-Z cross section and (d) a Y-Z cross-section. The synthetic model is shown as an outline on all sections, and tie lines are shown on all sections as solid and dashed lines, all location measurements are in centimeters.
+The 3D distributed saturated hydraulic conductivity model recovered from the inversion compared to the (a) synthetic model map view section, using (b) the same map view section, (c) an X-Z cross-section and (d) a Y-Z cross-section. The synthetic model is shown as an outline on all sections, and tie lines are shown on all sections as solid and dashed lines, all location measurements are in centimeters.
 ```
 
 ## Scalability of the implicit sensitivity

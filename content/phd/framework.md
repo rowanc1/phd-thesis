@@ -14,7 +14,7 @@ This chapter presents a framework for simulation and parameter estimation for ge
 
 ---
 
-% (sec:intro)=
+(sec:intro)=
 
 # Introduction and motivation
 
@@ -32,11 +32,11 @@ The goal of this chapter is to present a comprehensive framework for simulation 
 
 % \bigskip
 
-To guide the discussion, we start this chapter by outlining gradient-based inversion methodology in Section \ref{sec:methodology}. The inversion methodology directly motivates the construction of the {sc}`SimPEG` framework, terminology, and software implementation, which we discuss in Section \ref{sec:implementation}. We weave an example of Direct Current (DC) resistivity throughout the discussion of the {sc}`SimPEG` framework to provide context for the choices made and highlight many of the features of {sc}`SimPEG`.
+To guide the discussion, we start this chapter by outlining gradient-based inversion methodology in {numref}`sec:methodology`. The inversion methodology directly motivates the construction of the {sc}`SimPEG` framework, terminology, and software implementation, which we discuss in {numref}`sec:implementation`. We weave an example of Direct Current (DC) resistivity throughout the discussion of the {sc}`SimPEG` framework to provide context for the choices made and highlight many of the features of {sc}`SimPEG`.
 
 +++
 
-% (sec:methodology)=
+(sec:methodology)=
 
 # Inversion methodology
 
@@ -47,7 +47,7 @@ Geophysical inverse problems are motivated by the desire to extract information 
 F_i[\bfm] + \epsilon_i= d_i,
 ```
 
-where $F$ is a forward simulation operator that incorporates details of the relevant physical equations, sources, and survey design, $\bfm$ is a generic symbol for the inversion model, $\epsilon_{i}$ is the noise that is often assumed to have known statistics, and $d_i$ is the observed datum. In a typical geophysical survey, we are provided with the data, $d_i, i=1...N$, and some estimate of their uncertainties. The goal is to recover the model, $\bfm$, which is often a physical property. The data provide only a finite number of inaccurate constraints upon the sought model. Finding a model from the data alone is an ill-posed problem since no unique model exists that explains the data. Additional information must be included using prior information and assumptions (for example, downhole property logs, structural orientation information, or known interfaces {cite:p}`Fullagar2008, Li2000, lelievre2009integrating`). This prior knowledge is crucial if we are to obtain an appropriate representation of the earth and will be discussed in more detail in Section \ref{sub:inputs}.
+where $F$ is a forward simulation operator that incorporates details of the relevant physical equations, sources, and survey design, $\bfm$ is a generic symbol for the inversion model, $\epsilon_{i}$ is the noise that is often assumed to have known statistics, and $d_i$ is the observed datum. In a typical geophysical survey, we are provided with the data, $d_i, i=1...N$, and some estimate of their uncertainties. The goal is to recover the model, $\bfm$, which is often a physical property. The data provide only a finite number of inaccurate constraints upon the sought model. Finding a model from the data alone is an ill-posed problem since no unique model exists that explains the data. Additional information must be included using prior information and assumptions (for example, downhole property logs, structural orientation information, or known interfaces {cite:p}`Fullagar2008, Li2000, lelievre2009integrating`). This prior knowledge is crucial if we are to obtain an appropriate representation of the earth and will be discussed in more detail in {numref}`sub:inputs`.
 
 Defining and solving a well-posed inverse problem is a complex task that requires many interacting components. It helps to view this task as a workflow in which various elements are explicitly identified and integrated. {numref}`Figure %s <fig:inversionOutline>` outlines the inversion methodology that consists of inputs, implementation, and evaluation. The inputs are composed of: the geophysical data; the equations, which are a mathematical description of the governing physics; and, prior knowledge or assumptions about the setting. The implementation consists of two broad categories: the forward simulation and the inversion. The forward simulation is the means by which we solve the governing equations, given a model, and the inversion components evaluate and update this model. We are considering a gradient-based approach, which updates the model through an optimization routine. The output of this implementation is a model, which, prior to interpretation, must be evaluated. This requires considering, and often re-assessing, the choices and assumptions made in both the input and the implementation stages. In this chapter, our primary concern is the implementation component; that is, how the forward simulation and inversion are carried out numerically. As a prelude to discussing how the {sc}`SimPEG` software is implemented, we step through the elements in {numref}`Figure %s <fig:inversionOutline>`, considering a Tikhonov-style inversion.
 
@@ -56,7 +56,7 @@ Defining and solving a well-posed inverse problem is a complex task that require
 Inversion methodology. Including inputs, implementation, evaluation and interpretation.
 ```
 
-% (sub:inputs)=
+(sub:inputs)=
 
 ## Inputs
 
@@ -77,7 +77,7 @@ The governing equations provide the connection between the physical properties o
 
 If one model acceptably fits the data, then infinitely many such models exist. Additional information is therefore required to reduce non-uniqueness. This additional information can be geologic information, petrophysical knowledge about the various rock types, borehole logs, additional geophysical data sets, or inversion results. This prior information can be used to construct reference models for the inversion and also characterize features of the model, such as whether it is best described by a smooth function or if it is discontinuous across interfaces. Physical property measurements can be used to assign upper and lower bounds for a physical property model at points in a volume or in various regions within our 3D volume. The various types of information relevant to the geologic and geophysical questions that we must address must be combined and translated into useful information for the inversion {cite:p}`lelievre2009integrating,MaokunLi2010`.
 
-% (sec:inversion-elements)=
+(sec:inversion-elements)=
 
 ## Implementation
 
@@ -265,7 +265,7 @@ The final results and details about how the inversion algorithm has performed al
 
 In this section, we return to the initial question posed, which the inversion was designed to help answer. Questions of interest might include: (a) Are the interesting features supported by the data or are they artifacts?; (b) Does the result make sense geologically and geophysically?; and (c) Are there interesting features that should be investigated further? Addressing these questions usually involves repeating the inversion process with appropriate modifications (cf. {cite:t}`DougTutorial,Pidlisecky2011,lines1988cooperative`). As such, we require an implementation that is inherently and unequivocally modular, with all pieces available for manipulation. Black-box software, where the implementations are hidden, obfuscated, or difficult to manipulate, does not promote experimentation and investigation. Exposing the details of the implementation to the geophysicist in a manner that promotes productivity and question-based interrogation is the goal of {sc}`SimPEG` and is the topic of the next section.
 
-% (sec:implementation)=
+(sec:implementation)=
 
 # Modular implementation
 
@@ -304,7 +304,7 @@ We will use the DC resistivity problem from geophysics to motivate and explain t
 
 where $\sigma$ is the electrical conductivity, $\phi$ is the electric potential, and $I$ is the input current at the positive and negative dipole locations $\vec{r}_{s^\pm}$, captured as Dirac delta functions. In DC resistivity surveys, differences in the potential field, $\phi$, are sampled using dipole receivers to collect observed data. To simulate this partial differential equation (PDE) (or set of PDEs, if there are multiple current injection locations), we must discretize the equation onto a computational mesh.
 
-% (sec:framework-mesh)=
+(sec:framework-mesh)=
 
 ## Mesh
 
@@ -363,7 +363,7 @@ With the differential operators readily accessible across multiple mesh types, s
 \bf A(\sigma) \bfu = D (M_{1/\sigma}^f)^{-1} D^\top \bfu = - q,
 ```
 
-where $\bf D$ and $\bf D^\top$ are the divergence and 'gradient' operators, respectively. This equation is assuming Dirichlet boundary conditions and a weak formulation of the DC resistivity equations, as in Section \ref{sec:weakform}. The conductivity, $\sigma$, is harmonically averaged from cell-centers to cell-faces to create the matrix $\bf (M*{1/\sigma}^f)^{-1}$ {cite:p}`Pidlisecky2007`. Using our `discretize` package, this equation is written as:
+where $\bf D$ and $\bf D^\top$ are the divergence and 'gradient' operators, respectively. This equation is assuming Dirichlet boundary conditions and a weak formulation of the DC resistivity equations, as in {numref}`sec:weakform`. The conductivity, $\sigma$, is harmonically averaged from cell-centers to cell-faces to create the matrix $\bf (M*{1/\sigma}^f)^{-1}$ {cite:p}`Pidlisecky2007`. Using our `discretize` package, this equation is written as:
 
 % programs/dc-operator
 
@@ -445,7 +445,7 @@ The crucial aspects of the `Problem` class are shown in {numref}`Table %s <table
   - $\dpred(m) - \dobs$
 ```
 
-% (sec:DCforward)=
+(sec:DCforward)=
 
 ## DC resistivity forward simulation
 
@@ -472,7 +472,7 @@ The sensitivity and adjoint will be used in the optimization routine of the inve
 \mathbf{J} = - \mathbf{P}(\mathbf{A}(\bfm)^{-1} \nabla_\bfm C(\bfm,\bfu)),
 ```
 
-where $\nabla_\bfm C(\bfm,\bfu)$ is a known sparse matrix, $\bf A(m)$ is the forward operator and is equivalent to $\nabla_\bfu C(\bfm,\bfu)$, and $\bf P$ is a projection matrix (cf. {cite:t}`Pidlisecky2007`). Each matrix in this expression is sparse and can be explicitly formed; however, the product is dense and holding it in memory may not be possible. If an iterative solver is used in the optimization, only matrix vector products are necessary and the sensitivity need not be explicitly calculated or stored. Program \ref{prog:dc-sensitivity} outlines the calculation of `Jvec`, given a model, `m`, the fields, `u`, and a vector to multiply, `v`. In Program \ref{prog:dc-sensitivity}, we draw the distinction between the model, `m`, and the conductivity, `sig`, which are connected through a mapping, $\sigma = \mathcal{M}(\bfm)$, and associated derivatives. The matrix, $\nabla_\bfm C(\bfm, \bfu)$, is denoted `dCdm` and formed by looping over each source in the DC resistivity survey.
+where $\nabla_\bfm C(\bfm,\bfu)$ is a known sparse matrix, $\bf A(m)$ is the forward operator and is equivalent to $\nabla_\bfu C(\bfm,\bfu)$, and $\bf P$ is a projection matrix (cf. {cite:t}`Pidlisecky2007`). Each matrix in this expression is sparse and can be explicitly formed; however, the product is dense and holding it in memory may not be possible. If an iterative solver is used in the optimization, only matrix vector products are necessary and the sensitivity need not be explicitly calculated or stored. {numref}`prog:dc-sensitivity` outlines the calculation of `Jvec`, given a model, `m`, the fields, `u`, and a vector to multiply, `v`. In {numref}`prog:dc-sensitivity`, we draw the distinction between the model, `m`, and the conductivity, `sig`, which are connected through a mapping, $\sigma = \mathcal{M}(\bfm)$, and associated derivatives. The matrix, $\nabla_\bfm C(\bfm, \bfu)$, is denoted `dCdm` and formed by looping over each source in the DC resistivity survey.
 
 %programs/dc-jvec
 
@@ -542,7 +542,7 @@ The `Inversion` conducts all communication between the various components of the
 
 ## DC resistivity inversion
 
-We will build on the example presented in Section \ref{sec:DCforward}, which has a survey setup that only provides enough information for a vertical sounding. As such, we will decouple our 3D forward mesh and 1D inversion mesh and connect them through a mapping (cf. {cite:t}`KangSEG2015`). Additionally, since electrical conductivity is a log-varying parameter, we will also construct a model space that is optimized in log space. Both of these model transformations will be handled with a single map, $\mathcal{M}$, where $\boldsymbol{\sigma} = \mathcal{M}(\bfm)$.
+We will build on the example presented in {numref}`sec:DCforward`, which has a survey setup that only provides enough information for a vertical sounding. As such, we will decouple our 3D forward mesh and 1D inversion mesh and connect them through a mapping (cf. {cite:t}`KangSEG2015`). Additionally, since electrical conductivity is a log-varying parameter, we will also construct a model space that is optimized in log space. Both of these model transformations will be handled with a single map, $\mathcal{M}$, where $\boldsymbol{\sigma} = \mathcal{M}(\bfm)$.
 
 % programs/maps-vertical1d
 
@@ -553,14 +553,14 @@ mapping = Maps.ExpMap(mesh) * Maps.SurjectVertical1D(mesh)
 sigma = mapping * model
 ```
 
-We have provided a number of common mapping transformations in the `SimPEG.Maps` package and these can be easily combined with a multiplication symbol. Additionally, when using these maps, we calculate the derivatives using the chain rule, allowing them to be easily included in the sensitivity calculation (cf. Program \ref{prog:dc-sensitivity}, line 15). {numref}`Figure %s <fig:DCmapping>` demonstrates this mapping visually.
+We have provided a number of common mapping transformations in the `SimPEG.Maps` package and these can be easily combined with a multiplication symbol. Additionally, when using these maps, we calculate the derivatives using the chain rule, allowing them to be easily included in the sensitivity calculation (cf. {numref}`prog:dc-sensitivity`, line 15). {numref}`Figure %s <fig:DCmapping>` demonstrates this mapping visually.
 
 ```{figure} ./images/mapping-example-dc.png
 :name: fig:DCmapping
 Illustration of mapping in DC inversion. (a) 1D log conductivity model. (b) 3D conductivity model.
 ```
 
-The 1D model is in $log(\boldsymbol{\sigma})$, shown in {numref}`Figure %s(a) <fig:DCmapping>` as a black solid line, and the transformation produces a 3D `sigma` vector, which we plotted in {numref}`Figure %s(b) <fig:DCmapping>`. We can now use the same simulation machinery as discussed in Section \ref{sec:DCforward}, with a single change:
+The 1D model is in $log(\boldsymbol{\sigma})$, shown in {numref}`Figure %s(a) <fig:DCmapping>` as a black solid line, and the transformation produces a 3D `sigma` vector, which we plotted in {numref}`Figure %s(b) <fig:DCmapping>`. We can now use the same simulation machinery as discussed in {numref}`sec:DCforward`, with a single change:
 
 % programs/dc-problem
 
@@ -592,7 +592,7 @@ We note that there are many options and inputs that can enhance the inversion; r
 (a) Observed (black line) and predicted (red line) apparent resistivity values. (b) True and recovered 1D conductivity model.
 ```
 
-% (sec:conclusions)=
+(sec:conclusions)=
 
 # Conclusions
 

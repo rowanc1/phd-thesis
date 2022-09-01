@@ -33,7 +33,7 @@ The topographic interface, the location of boundary conditions, and the location
 r \in [0, \infty), \qquad \theta \in [0, 2\pi), \qquad z \in (-\infty, \infty)
 ```
 
-Cylindrical symmetry is enforced through a single cell in $\theta$. With the exception of calculations for boundary conditions, volume and area are formulated similarly to tensor meshes. Cylindrical meshes are often used for electromagnetics problems for layered systems or cylindrically symmetric problems, such as geophysics or fluid flow around a borehole {cite:p}`Pidlisecky2013, Heagy2016`. Fully unstructured (tetrahedral) meshes will not be considered here, but are commonly used in geophysics and hydrogeology (e.g. \cite{Ollivier-gooch2002, Jahandari2017}). We chose the meshes used in this appendix for their common use in electromagnetic geophysics and fluid flow {cite:p}`Haber2001, liol96, Egbert2012, McDonald2003, Kelbert2014, simpeg2015`. All meshes are easy to parameterize, which is an advantage when relatively little is known about the simulation domain, as is the case in the context in geophysical inverse problems.
+Cylindrical symmetry is enforced through a single cell in $\theta$. With the exception of calculations for boundary conditions, volume and area are formulated similarly to tensor meshes. Cylindrical meshes are often used for electromagnetics problems for layered systems or cylindrically symmetric problems, such as geophysics or fluid flow around a borehole {cite:p}`Pidlisecky2013, Heagy2016`. Fully unstructured (tetrahedral) meshes will not be considered here, but are commonly used in geophysics and hydrogeology (e.g. {cite:p}`Ollivier-gooch2002, Jahandari2017`). We chose the meshes used in this appendix for their common use in electromagnetic geophysics and fluid flow {cite:p}`Haber2001, liol96, Egbert2012, McDonald2003, Kelbert2014, simpeg2015`. All meshes are easy to parameterize, which is an advantage when relatively little is known about the simulation domain, as is the case in the context in geophysical inverse problems.
 
 ```{figure} images/fv-mesh-types.png
 :name: fig:finitevolume-mesh-types
@@ -86,14 +86,14 @@ n_{e_z} &= (n_{c_x} + 1) \times (n_{c_y} + 1) \times n_{c_z}    & \text{z-edges}
 \end{align*}
 ```
 
-When comparing this to a cylindrically symmetric mesh, it is interesting to note that neither nodes nor $\theta$ faces exist, and edges only exist in the $\theta$ direction. A tree mesh has an added complication, which occurs when two adjacent cells have different refinement levels, leading to hanging nodes, edges, and faces. {numref}`Figure %s <fig:finitevolume-cell-anatomy-tree>` schematically shows the locations of the hanging faces and nodes. When not dealt with, these complications cause numerical inaccuracies, which we will discuss further in Section \ref{sec:operators} on differential operators and Section \ref{sec:innerproducts} on inner products.
+When comparing this to a cylindrically symmetric mesh, it is interesting to note that neither nodes nor $\theta$ faces exist, and edges only exist in the $\theta$ direction. A tree mesh has an added complication, which occurs when two adjacent cells have different refinement levels, leading to hanging nodes, edges, and faces. {numref}`Figure %s <fig:finitevolume-cell-anatomy-tree>` schematically shows the locations of the hanging faces and nodes. When not dealt with, these complications cause numerical inaccuracies, which we will discuss further in {numref}`sec:operators` on differential operators and {numref}`sec:innerproducts` on inner products.
 
 ```{figure} images/fv-cell-anatomy-tree.png
 :name: fig:finitevolume-cell-anatomy-tree
 Names of a finite volume cell on a tree mesh in (a) two dimensions, and (b) three dimensions. Note the location of hanging x-faces from the refined cells; hanging edges are not shown.
 ```
 
-% (sec:dc-derivation)=
+(sec:dc-derivation)=
 
 ## DC resistivity equations
 
@@ -116,7 +116,7 @@ where $I$ is the input current at the positive and negative dipole locations, $\
 Derivation of the direct current resistivity equations.
 ```
 
-% (sec:weakform)=
+(sec:weakform)=
 
 ## Weak formulation
 
@@ -160,10 +160,10 @@ Here, if we assume Dirichlet boundary conditions for $\phi \mid_{_{\partial\Omeg
 ```
 
 We use Dirichlet for simplicity in this example. In practice, Neumann conditions are often used because 'infinity' needs to be further away, if applying Dirichlet boundary conditions, since potential falls off as $1/r^2$ and current density as $1/r^3$.
-% We will discuss boundary conditions further in Section \ref{sec:boundary-conditions}.
+% We will discuss boundary conditions further in {numref}`sec:boundary-conditions`.
 Similar techniques for the weak formulation of Maxwell equations can be derived by applying the appropriate vector identities and boundary conditions. In the following two sections, we will discuss the differential operators and the discretization of inner products that are prevalent in the weak formulation.
 
-% (sec:operators)=
+(sec:operators)=
 
 # Operators
 
@@ -307,11 +307,11 @@ For both the quadtree and octree meshes, we must once again deal with the hangin
 
 Since we are using a staggered grid with centered differences, the discretization of the differential operators is second-order. That is, as we refine the mesh, our approximation of the divergence should improve by a factor of two. We can verify this numerical convergence using simple test functions with analytic expressions, well-chosen boundary conditions, and known derivatives. The assertion of this expectation of order is a critical piece of any numerical implementation.
 
-% (sec:innerproducts)=
+(sec:innerproducts)=
 
 # Inner products
 
-Evaluating volume integrals over the cell becomes important when formulating equations in weak form, as in Section \ref{sec:weakform}. We can numerically evaluate these volume integrals in many different ways, however, the method must take into account the location and number of approximations of the integrand variables that are available. For two cell-centered variables, for example, the evaluation of the integral is simple and can be calculated by the midpoint approximation. The result is an _inner product_ that includes a volume term, $\mathbf{v}$, for each cell:
+Evaluating volume integrals over the cell becomes important when formulating equations in weak form, as in {numref}`sec:weakform`. We can numerically evaluate these volume integrals in many different ways, however, the method must take into account the location and number of approximations of the integrand variables that are available. For two cell-centered variables, for example, the evaluation of the integral is simple and can be calculated by the midpoint approximation. The result is an _inner product_ that includes a volume term, $\mathbf{v}$, for each cell:
 
 % equations/weakform/cell-innerproduct
 
@@ -678,7 +678,7 @@ There is a `BaseMesh` that has properties such as number of cells, nodes, faces,
 
 ## User interface
 
-Our goal for the implementation is to create a common programmatic terminology for working with finite volume techniques. By sharing the numerical implementation, not only is this 'language' precise, but it can also be tested for accuracy. A brief description of the implementation and use in practice, as well as a look at some of the major properties on the abstract mesh types in {numref}`Table %s <table:Mesh>`, was previously given in Section \ref{sec:framework-mesh}. As the implementation is openly available, we will point the reader to both the online, up-to-date documentation of each specific property and method (<https://discretize.simpeg.xyz>) and to the 400+ unittest results of numerical convergence (<https://travis-ci.org/simpeg/discretize>). As a brief overview, we use the convention of `C`, `N`, `F`, `E` to refer to cells, nodes, faces and edges, respectively. For example, for a tensor mesh the number of cells in the x-dimension would be called `nCx`, the nodal tensor of x-locations as a vector is called `vectorNx`, and the location of all face variables with an x-component is called `gridFx`. We named differential operators by the variable location that they act upon; for example: `faceDiv` and `edgeCurl`. These names allow us to define multiple operators. For example, the gradient can either operate on cell centers or nodes, `cellGrad` and `nodalGrad`, respectively. This language is common across all meshes considered and extends to other mesh types not yet implemented. As such, geophysical simulation codes can be built on top of this work to write PDEs in a declarative way, which is agnostic to the mesh implementation actually used. In collaboration with Heagy, Kang, Rosenkjaer and Mitchell simulations have been completed for time, frequency, and static implementations of electromagnetics using 1D, 2D, and 3D versions of the tensor, tree, curvilinear and cylindrically symmetric meshes {cite:p}`Rosenkjaer2016,Kang2015,Heagy2015,HeagySEG2014,Cockett2014c,Kang2014,Heagy2015a,Cockett2013a,fvtutorial,Heagy2016,Rosenkjaer2015,HeagySciPy2015`. The terminology developed defines a clear interface, which allows for improvements in speed and functionality of the `discretize` package to transparently improve geophysical simulations.
+Our goal for the implementation is to create a common programmatic terminology for working with finite volume techniques. By sharing the numerical implementation, not only is this 'language' precise, but it can also be tested for accuracy. A brief description of the implementation and use in practice, as well as a look at some of the major properties on the abstract mesh types in {numref}`Table %s <table:Mesh>`, was previously given in {numref}`sec:framework-mesh`. As the implementation is openly available, we will point the reader to both the online, up-to-date documentation of each specific property and method (<https://discretize.simpeg.xyz>) and to the 400+ unittest results of numerical convergence (<https://travis-ci.org/simpeg/discretize>). As a brief overview, we use the convention of `C`, `N`, `F`, `E` to refer to cells, nodes, faces and edges, respectively. For example, for a tensor mesh the number of cells in the x-dimension would be called `nCx`, the nodal tensor of x-locations as a vector is called `vectorNx`, and the location of all face variables with an x-component is called `gridFx`. We named differential operators by the variable location that they act upon; for example: `faceDiv` and `edgeCurl`. These names allow us to define multiple operators. For example, the gradient can either operate on cell centers or nodes, `cellGrad` and `nodalGrad`, respectively. This language is common across all meshes considered and extends to other mesh types not yet implemented. As such, geophysical simulation codes can be built on top of this work to write PDEs in a declarative way, which is agnostic to the mesh implementation actually used. In collaboration with Heagy, Kang, Rosenkjaer and Mitchell simulations have been completed for time, frequency, and static implementations of electromagnetics using 1D, 2D, and 3D versions of the tensor, tree, curvilinear and cylindrically symmetric meshes {cite:p}`Rosenkjaer2016,Kang2015,Heagy2015,HeagySEG2014,Cockett2014c,Kang2014,Heagy2015a,Cockett2013a,fvtutorial,Heagy2016,Rosenkjaer2015,HeagySciPy2015`. The terminology developed defines a clear interface, which allows for improvements in speed and functionality of the `discretize` package to transparently improve geophysical simulations.
 
 The `discretize` interface allows for lazy loading of properties; that is, all properties of the mesh are created on demand and then stored for later use. This caching of properties is important, as not all operators are useful in all problems and, as such, are not created. The implementation here is different from some other finite volume implementations, as the operators are held in memory as matrices and are readily available for interrogation. We find this feature beneficial for educational and research purposes, as the discretization remains visually very close to the math, and the matrices can be manipulated, visually inspected, and readily combined.
 
@@ -686,7 +686,7 @@ The major difference between the mesh types is the instantiation of each type. A
 
 # Numerical examples
 
-Here we will briefly explore the application of the curvilinear mesh for a DC resistivity problem, which was introduced in Section \ref{sec:dc-derivation}. We will explore the equations for a tensor mesh and a curvilinear mesh over a unit cube with Neumann boundary conditions. We tested the forward operators for analytical potential fields with the appropriate boundary conditions. A series of electrode arrays (surveys) were written to produce and collect data from the forward model. The survey used in this paper considered all receiver permutations in a grid on the top surface of the model. We note that it is not possible to experimentally collect data at the same location as the source electrodes; we discarded these permutations.
+Here we will briefly explore the application of the curvilinear mesh for a DC resistivity problem, which was introduced in {numref}`sec:dc-derivation`. We will explore the equations for a tensor mesh and a curvilinear mesh over a unit cube with Neumann boundary conditions. We tested the forward operators for analytical potential fields with the appropriate boundary conditions. A series of electrode arrays (surveys) were written to produce and collect data from the forward model. The survey used in this paper considered all receiver permutations in a grid on the top surface of the model. We note that it is not possible to experimentally collect data at the same location as the source electrodes; we discarded these permutations.
 
 ```{figure} images/fv-tensor-curvilinear-compare.png
 :name: fig:fv-ex-tensor-curvilinear-compare
