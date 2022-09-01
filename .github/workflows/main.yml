@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to curve.space
+      - name: Deploy to Curvenote
         uses: curvenote/action-deploy@v1
         env:
           CURVENOTE_TOKEN: ${{ secrets.CURVENOTE_TOKEN }}
