@@ -51,16 +51,16 @@ The Richards equation relies upon the correct parameterization of both the water
 :label: eq:van-genuchten
 \begin{align*}
   \theta(\psi) &=
-  \left\{\begin{aligned}
-      \theta_r& + \frac{\theta_s- \theta_r}{(1+|\alpha \psi|^n)^m}  & \psi < 0 \\
+  \begin{cases}
+      \theta_r& + \frac{\theta_s- \theta_r}{(1+|\alpha \psi|^n)^m}  \qquad\qquad\qquad\qquad & \psi < 0 \\
       \theta_s& & \psi \ge 0
-  \end{aligned}\right.
+  \end{cases}
   \\
   k(\psi) &=
-  \left\{\begin{aligned}
+  \begin{cases}
       K_s & \theta_e(\psi)^l(1-(1- \theta_e(\psi)^{-m})^m)^2 & \psi < 0 \\
       K_s& & \psi \ge 0
-  \end{aligned}\right.
+  \end{cases}
 \end{align*}
 ```
 
