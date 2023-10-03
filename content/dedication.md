@@ -15,6 +15,5 @@ numbering: false
 > processes -- a hierarchy whose foundation extends down into natural processes
 > below the depth of our comprehension. If there is any one thing upon which this
 > 'intelligence depends' it would seem to be organization.
-
-~Douglas C. Engelbart (1962)
-Augmenting human intellect: a conceptual framework
+>
+> - Douglas C. Engelbart (1962), Augmenting human intellect: a conceptual framework
