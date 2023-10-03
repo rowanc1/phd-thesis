@@ -7,6 +7,13 @@ project:
   license: CC-BY-4.0
   doi: 10.14288/1.0362383
   date: 2017-12-22T00:00:00.000Z
+  references:
+    python: https://docs.python.org/3.7
+    jupyterbook: https://jupyterbook.org/en/stable/
+    mystpy: https://myst-parser.readthedocs.io/en/latest/
+  bibliography:
+    - references.bib
+    # - https://paperpile.com/eb/JVPJaUuhjx
   authors:
     - name: Rowan Cockett
       userId: vKndfPAZO7WeFxLH1GQcpnXPzfH3

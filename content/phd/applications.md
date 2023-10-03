@@ -1,5 +1,7 @@
 ---
 title: Vadose Zone Inversions
+short_title: Vadose Zone Inversions
+subtitle: Applications of Richards Equation
 description: 1D and 3D inversions for 3D recovery of a distributed hydraulic parameters using the Richards Equation.
 subject: Chapter 4
 numbering:

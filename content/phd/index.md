@@ -5,7 +5,7 @@ description: PhD Thesis by Rowan Cockett, University of British Columbia, Comput
 numbering: false
 ---
 
-+++
++++ {"class": "text-center"}
 
 ---
 
