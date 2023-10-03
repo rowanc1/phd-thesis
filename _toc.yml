@@ -1,0 +1,28 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: content/index
+parts:
+  - caption: Frontmatter
+    chapters:
+      - file: content/abstract
+      - file: content/preface
+      - file: content/acknowledgments
+      - file: content/dedication
+  - caption: Chapters
+    chapters:
+      - file: content/introduction
+      - file: content/framework
+      - file: content/richards
+      - file: content/applications
+      - file: content/conclusions
+  - caption: Appendices
+    chapters:
+      - file: content/ontology
+      - file: content/discretize
+      - file: content/extensions
+      - file: content/dissemination
+  - caption: Presentations
+    chapters:
+      - file: content/presentations
